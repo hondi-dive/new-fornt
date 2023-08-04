@@ -8,7 +8,7 @@ interface Props {
 
 export default function Header({ onBackClick, onNextClick, title }: Props) {
   return (
-    <header className="flex justify-between items-center h-16 px-6">
+    <header className="flex justify-between items-center h-16 px-6 shadow-[0_0_12px_3px_rgba(56,56,56,0.1)]">
       <div>
         {onBackClick && (
           <button onClick={onBackClick}>
