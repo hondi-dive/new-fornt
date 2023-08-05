@@ -1,4 +1,4 @@
-import CaretLeftIcon from "@/assets/icons/CaretLeft.svg";
+import CaretLeftIcon from '@/assets/icons/CaretLeft.svg';
 
 interface Props {
   onBackClick?: () => void;
