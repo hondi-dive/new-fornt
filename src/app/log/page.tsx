@@ -1,5 +1,6 @@
 'use client';
 import Header from '@/components/common/Header';
+import Select from '@/components/common/Select';
 import { useRouter } from 'next/navigation';
 
 export default function Log() {
@@ -17,6 +18,17 @@ export default function Log() {
         onNextClick={handleNextClick}
       />
       Log
+      <div className='p-5'>
+
+      <Select>
+        <option>
+          test1
+        </option>
+        <option>
+          test2
+        </option>
+        </Select>
+      </div>
     </div>
   );
 }
