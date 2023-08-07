@@ -1,5 +1,3 @@
 export default function Place() {
-  return (
-    <div>Place</div>
-  )
+  return <div>Place</div>;
 }
