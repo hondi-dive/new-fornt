@@ -1,4 +1,5 @@
 'use client';
+import Satisfaction from '@/app/log/Satisfaction';
 import StepContainer from '@/app/log/StepContainer';
 import Button from '@/components/common/Button';
 import Header from '@/components/common/Header';
@@ -26,17 +27,23 @@ export default function Log() {
             <span className=" text-lg text-white">장소등록</span>
           </Button>
         </StepContainer>
+
         <StepContainer step={2} title="등록날짜 입력">
           <Select>
             <option>2023년 8월 5일</option>
             <option>test2</option>
           </Select>
         </StepContainer>
+
         <StepContainer step={3} title="활동유형 선택">
           <Select>
             <option>스쿠버 다이빙</option>
             <option>test2</option>
           </Select>
+        </StepContainer>
+
+        <StepContainer step={4} title="만족도 선택">
+          <Satisfaction />
         </StepContainer>
       </div>
     </div>
