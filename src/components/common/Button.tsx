@@ -1,4 +1,4 @@
-import { ButtonHTMLAttributes, PropsWithChildren, Ref, forwardRef, useId } from 'react';
+import { ButtonHTMLAttributes, Ref, forwardRef, useId } from 'react';
 
 interface Props extends ButtonHTMLAttributes<HTMLButtonElement> {
   size?: 'medium' | 'small';
