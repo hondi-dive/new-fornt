@@ -9,13 +9,8 @@ function getInitialValue<T>(key: string, initialValue: T): T {
   }
 }
 
-function useLocalStorage<T>(
-  key: string,
-  initialValue: T,
-): [T, (value: T) => void] {
-  const [storedValue, setStoredValue] = useState<T>(() =>
-    getInitialValue<T>(key, initialValue),
-  );
+function useLocalStorage<T>(key: string, initialValue: T): [T, (value: T) => void] {
+  const [storedValue, setStoredValue] = useState<T>(() => getInitialValue<T>(key, initialValue));
 
   const setValue = (value: T) => {
     try {
