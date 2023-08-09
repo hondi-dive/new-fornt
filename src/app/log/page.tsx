@@ -1,4 +1,5 @@
 'use client';
+import ImageUploader from '@/app/log/ImageUploader';
 import Satisfaction from '@/app/log/Satisfaction';
 import StepContainer from '@/app/log/StepContainer';
 import Button from '@/components/common/Button';
@@ -21,7 +22,7 @@ export default function Log() {
         onNextClick={handleNextClick}
       />
       Log
-      <div className="p-5 flex flex-col gap-[42px]">
+      <div className=" p-6 flex flex-col gap-[42px]">
         <StepContainer step={1} title="바다장소 등록">
           <Button onClick={() => console.log('test')}>
             <span className=" text-lg text-white">장소등록</span>
@@ -44,6 +45,10 @@ export default function Log() {
 
         <StepContainer step={4} title="만족도 선택">
           <Satisfaction />
+        </StepContainer>
+
+        <StepContainer step={5} title="등록할 사진선택">
+          <ImageUploader />
         </StepContainer>
       </div>
     </div>
