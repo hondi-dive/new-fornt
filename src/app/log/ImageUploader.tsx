@@ -1,12 +1,14 @@
 'use client';
 import Plus from '@/assets/icons/plus.svg';
 import XIcon from '@/assets/icons/xIcon.svg';
+import useWindowSize from '@/hooks/useWindowSize';
 import Image from 'next/image';
 import { ChangeEvent, useRef, useState } from 'react';
 
 export default function ImageUploader() {
-  const size = window.screen.width - 48;
   const fileInputRef = useRef<HTMLInputElement>(null);
+  const windowSize = useWindowSize();
+  const size = (windowSize?.width ? windowSize.width : 393) - 48;
 
   const [image, setImage] = useState('');
   const [imageForm, setImageForm] = useState<FormData>();

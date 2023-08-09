@@ -1,4 +1,4 @@
-import { ButtonHTMLAttributes, Ref, forwardRef, useId } from 'react';
+import { ButtonHTMLAttributes, Ref, forwardRef } from 'react';
 
 interface Props extends ButtonHTMLAttributes<HTMLButtonElement> {
   size?: 'medium' | 'small';
@@ -7,7 +7,6 @@ interface Props extends ButtonHTMLAttributes<HTMLButtonElement> {
 
 const Button = forwardRef((props: Props, forwardRef: Ref<HTMLButtonElement>) => {
   const { size = 'medium', color = 'primary', children, ...rest } = props;
-  const buttonId = useId();
 
   const BUTTON_COLOR = {
     primary: 'bg-[#567BFF]',
@@ -24,7 +23,6 @@ const Button = forwardRef((props: Props, forwardRef: Ref<HTMLButtonElement>) => 
     <button
       className={`w-full rounded-lg outline-none ${BUTTON_SIZE[size]} ${BUTTON_COLOR[color]}`}
       ref={forwardRef}
-      id={buttonId}
       {...rest}
     >
       {children}
