@@ -4,8 +4,6 @@ import Share from '@/assets/icons/share.svg';
 import Image from 'next/image';
 import DumiImg from '@/assets/images/diving.png';
 import ArrowCircle from '@/assets/icons/arrowCircle.svg';
-import TooltipFill from '@/assets/icons/tooltipFill.svg';
-import HeartEmpty from '@/assets/icons/heartEmpty.svg';
 import HashTag from '@/app/feed/detail/HashTag';
 import Heart from '@/assets/icons/Heart';
 import Tooltip from '@/assets/icons/Tooltip';
