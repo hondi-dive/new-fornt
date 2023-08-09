@@ -10,7 +10,7 @@ interface Props {
 
 const Header = ({ title, backComponents, nextComponents }: Props) => {
   return (
-    <header className="flex justify-between items-center h-16 px-6 shadow-[0_0_12px_3px_rgba(56,56,56,0.1)]">
+    <header className="flex justify-between items-center h-16 px-6 border-b-[#d9d9d9] border-solid border-b-[1px] bg-white">
       <div className=" w-10 flex justify-start">{backComponents && backComponents}</div>
 
       <span className="text-[17px]">{title}</span>
