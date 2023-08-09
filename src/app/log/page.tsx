@@ -11,7 +11,7 @@ export default function Log() {
   const router = useRouter();
 
   const handleNextClick = () => {
-    router.push('logDetail');
+    router.push('/logDetail');
   };
 
   return (
