@@ -1,5 +1,6 @@
 'use client';
 import ImageUploader from '@/app/log/ImageUploader';
+import ProgressTitle from '@/app/log/ProgressTitle';
 import Satisfaction from '@/app/log/Satisfaction';
 import StepContainer from '@/app/log/StepContainer';
 import Button from '@/components/common/Button';
@@ -21,8 +22,13 @@ export default function Log() {
         onBackClick={() => router.back()}
         onNextClick={handleNextClick}
       />
-      Log
       <div className=" p-6 flex flex-col gap-[42px]">
+        <ProgressTitle
+          currProgress={1}
+          totalProgress={2}
+          text={`경험을 담아서\n나만의 로그를 작성해볼까요?`}
+        />
+
         <StepContainer step={1} title="바다장소 등록">
           <Button onClick={() => console.log('test')}>
             <span className=" text-lg text-white">장소등록</span>
@@ -50,6 +56,8 @@ export default function Log() {
         <StepContainer step={5} title="등록할 사진선택">
           <ImageUploader />
         </StepContainer>
+
+        <div className=" h-24" />
       </div>
     </div>
   );
