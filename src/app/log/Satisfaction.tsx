@@ -1,6 +1,5 @@
 import { useState } from 'react';
-import HeartEmpty from '@/assets/icons/heartEmpty.svg';
-import HeartFill from '@/assets/icons/heartFill.svg';
+import Heart from '@/assets/icons/Heart';
 
 export default function Satisfaction() {
   const [satisfaction, setSatisfaction] = useState(0);
@@ -21,13 +20,13 @@ export default function Satisfaction() {
         if (satisfaction >= i + 1) {
           return (
             <button key={i} onClick={() => handleClick(i + 1)}>
-              <HeartFill />
+              <Heart isFill={true} />
             </button>
           );
         } else {
           return (
             <button key={i} onClick={() => handleClick(i + 1)}>
-              <HeartEmpty />
+              <Heart />
             </button>
           );
         }

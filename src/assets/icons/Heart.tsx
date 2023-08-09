@@ -2,12 +2,12 @@ import * as React from 'react';
 import { SVGProps } from 'react';
 
 interface Props extends SVGProps<SVGSVGElement> {
-  size: number;
-  isFill: boolean;
+  size?: number;
+  isFill?: boolean;
 }
 
 const Heart = (props: Props) => {
-  const { size, isFill } = props;
+  const { size = 33, isFill = false } = props;
 
   return (
     <svg
