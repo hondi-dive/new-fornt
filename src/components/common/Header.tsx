@@ -11,7 +11,7 @@ interface Props {
 
 const Header = ({ title, backComponents, nextComponents }: Props) => {
   return (
-    <header className="flex fixed top-0 left-0 w-full max-w-[393px] justify-between items-center h-16 px-6 border-b-[#d9d9d9] border-solid border-b-[1px] bg-white">
+    <header className="flex fixed top-0 w-full max-w-[393px] justify-between items-center h-16 px-6 border-b-[#d9d9d9] border-solid border-b-[1px] bg-white">
       <div className=" w-10 flex justify-start">{backComponents && backComponents}</div>
 
       <span className="text-[17px]">{title}</span>
