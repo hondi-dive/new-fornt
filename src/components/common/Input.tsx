@@ -13,10 +13,21 @@ export default function Input({ _size = 'medium', unit, ...rest }: Props) {
 
   return (
     <div
-      className={`flex justify-between items-center px-[18px] rounded-lg border-solid border-[1px] border-[rgb(165,165,165)] ${INPUT_SIZE[_size]}`}
+      className={`flex justify-between items-center px-[18px] rounded-lg ${
+        rest.disabled ? 'bg-[#e9eaf4]' : 'border-solid border-[1px] border-[rgb(165,165,165)]'
+      } ${INPUT_SIZE[_size]}`}
     >
-      <input className=" w-full outline-none" {...rest} />
-      {unit && <span className="font-medium ml-2 text-[#a5a5a5] text-sm">{unit}</span>}
+      <input
+        className=" w-full outline-none disabled:bg-transparent text-right text-sm"
+        {...rest}
+      />
+      {unit && (
+        <span
+          className={`font-medium ml-1 text-sm ${rest.disabled ? 'text-black' : 'text-[#a5a5a5]'}`}
+        >
+          {unit}
+        </span>
+      )}
     </div>
   );
 }
