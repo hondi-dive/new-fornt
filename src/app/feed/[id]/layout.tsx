@@ -57,7 +57,7 @@ export default function Layout({ children, params }: LayoutProps) {
   return (
     <>
       <Header title={spot.title} />
-      <div className="h-screen w-full pt-20">{children}</div>
+      <div className="h-screen w-full">{children}</div>
       <BottomNav />
     </>
   );
