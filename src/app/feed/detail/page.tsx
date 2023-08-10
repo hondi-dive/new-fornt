@@ -4,7 +4,7 @@ import Share from '@/assets/icons/share.svg';
 import Image from 'next/image';
 import DumiImg from '@/assets/images/diving.png';
 import ArrowCircle from '@/assets/icons/arrowCircle.svg';
-import HashTag from '@/app/feed/detail/HashTag';
+import HashTag from '@/components/page/feed/HashTag';
 import Heart from '@/assets/icons/Heart';
 import Tooltip from '@/assets/icons/Tooltip';
 

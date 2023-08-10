@@ -1,7 +1,7 @@
 'use client';
 import React from 'react';
 import { usePathname, useRouter } from 'next/navigation';
-import ProgressTitle from '@/app/log/ProgressTitle';
+import ProgressTitle from '@/components/page/log/ProgressTitle';
 import Header from '@/components/common/Header';
 
 export default function Layout({ children }: { children: React.ReactNode }) {

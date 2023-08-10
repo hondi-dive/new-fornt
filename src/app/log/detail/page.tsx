@@ -1,5 +1,5 @@
-import StepContainer from '@/app/log/StepContainer';
-import SubTitleContainer from '@/app/log/detail/SubTitleContainer';
+import StepContainer from '@/components/page/log/StepContainer';
+import SubTitleContainer from '@/components/common/SubTitleContainer';
 import Button from '@/components/common/Button';
 import Input from '@/components/common/Input';
 
