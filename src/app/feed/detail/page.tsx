@@ -31,7 +31,9 @@ export default function FeedDetail({ searchParams }: Props) {
         }
       />
 
-      <Image alt="feed image" src={DumiImg} />
+      <div className="mt-16">
+        <Image alt="feed image" src={DumiImg} />
+      </div>
 
       <div className="bg-white rounded-br-3xl rounded-bl-3xl px-6 py-[22px]">
         <div className="flex justify-between items-end">

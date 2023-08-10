@@ -11,7 +11,7 @@ export default function FeedDetailLog() {
     <div>
       <Header title="로그 기록" backComponents={<Header.Back />} />
 
-      <div className=" px-6 py-[22px]">
+      <div className=" px-6 py-[22px] mt-16">
         <div className="flex justify-start">
           <IdBadge id="Cherisher_y" />
         </div>

@@ -1,3 +1,4 @@
+'use client';
 import CaretLeftIcon from '@/assets/icons/CaretLeft.svg';
 import { useRouter } from 'next/navigation';
 import { ButtonHTMLAttributes, PropsWithChildren } from 'react';
@@ -10,7 +11,7 @@ interface Props {
 
 const Header = ({ title, backComponents, nextComponents }: Props) => {
   return (
-    <header className="flex justify-between items-center h-16 px-6 border-b-[#d9d9d9] border-solid border-b-[1px] bg-white">
+    <header className="flex fixed top-0 left-0 w-full max-w-[393px] justify-between items-center h-16 px-6 border-b-[#d9d9d9] border-solid border-b-[1px] bg-white">
       <div className=" w-10 flex justify-start">{backComponents && backComponents}</div>
 
       <span className="text-[17px]">{title}</span>
@@ -21,14 +22,27 @@ const Header = ({ title, backComponents, nextComponents }: Props) => {
 };
 
 interface HeaderNextProps extends ButtonHTMLAttributes<HTMLButtonElement> {
-  onNextClick: () => void;
+  path?: string;
+  onNextClick?: () => void;
 }
 
-const HeaderNext = ({ children, onNextClick, ...rest }: PropsWithChildren<HeaderNextProps>) => {
+const HeaderNext = ({
+  children,
+  path,
+  onNextClick,
+  ...rest
+}: PropsWithChildren<HeaderNextProps>) => {
+  const router = useRouter();
+
+  const handleNext = () => {
+    if (!!path) router.push(path);
+    if (!!onNextClick) onNextClick();
+  };
+
   return (
     <button
       className="text-[#426BFF] text-lg font-semibold disabled:text-[#d9d9d9]"
-      onClick={onNextClick}
+      onClick={handleNext}
       {...rest}
     >
       {children}

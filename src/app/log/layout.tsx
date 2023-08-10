@@ -39,7 +39,7 @@ export default function Layout({ children }: { children: React.ReactNode }) {
           </Header.Next>
         }
       />
-      <div className=" p-6 flex flex-col gap-[42px]">
+      <div className=" mt-16 p-6 flex flex-col gap-[42px]">
         <ProgressTitle
           currProgress={getDataByPath(pathname, 1, 2)}
           totalProgress={2}
