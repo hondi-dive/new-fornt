@@ -1,4 +1,7 @@
+'use client';
+
 import { useState } from 'react';
+
 import Heart from '@/assets/icons/Heart';
 
 export default function Satisfaction() {
