@@ -11,7 +11,7 @@ const Button = forwardRef((props: Props, forwardRef: Ref<HTMLButtonElement>) => 
   const BUTTON_COLOR = {
     primary: 'bg-[#567BFF]',
     secondary: 'bg-[#92aafd]',
-    normal: 'bg-[#E9EAF4]',
+    normal: 'bg-white border-solid border-[1px] border-[#92aafd]',
   };
 
   const BUTTON_SIZE = {
