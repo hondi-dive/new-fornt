@@ -1,7 +1,7 @@
 'use client';
-import ImageUploader from '@/app/log/ImageUploader';
-import Satisfaction from '@/app/log/Satisfaction';
-import StepContainer from '@/app/log/StepContainer';
+import ImageUploader from '@/components/page/log/ImageUploader';
+import Satisfaction from '@/components/page/log/Satisfaction';
+import StepContainer from '@/components/page/log/StepContainer';
 import Button from '@/components/common/Button';
 import Select from '@/components/common/Select';
 
