@@ -1,3 +1,5 @@
+'use client';
+
 import ImageUploader from '@/components/page/log/ImageUploader';
 import Satisfaction from '@/components/page/log/Satisfaction';
 import StepContainer from '@/components/page/log/StepContainer';

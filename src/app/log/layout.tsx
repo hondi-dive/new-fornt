@@ -1,6 +1,8 @@
 'use client';
+
 import React from 'react';
 import { usePathname, useRouter } from 'next/navigation';
+
 import ProgressTitle from '@/components/page/log/ProgressTitle';
 import Header from '@/components/common/Header';
 
