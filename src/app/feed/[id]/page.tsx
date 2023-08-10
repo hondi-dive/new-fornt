@@ -2,6 +2,7 @@
 
 import React, { Fragment } from 'react';
 import { Tab } from '@headlessui/react';
+import Link from 'next/link';
 
 import CheckCircle from '@/assets/icons/CheckCircle.svg';
 
@@ -30,7 +31,17 @@ export default function Feed() {
         </Tab.List>
         <Tab.Panels className="mt-8">
           <Tab.Panel>
-            <div className="grid  gap-2 grid-cols-2 ">
+            <div className="grid gap-3 grid-cols-2 ">
+              {['1', '2', '3', '4', '5', '6', '8'].map((item) => (
+                <Link key={item} href={`/feed/detail/${item}`}>
+                  <div className=" bg-red-400 w-full  h-[168px] rounded-lg">{item}</div>
+                </Link>
+              ))}
+              <div></div>
+            </div>
+          </Tab.Panel>
+          <Tab.Panel>
+            <div className="grid gap-3 grid-cols-2 ">
               {['1', '2', '3', '4', '5', '6', '8'].map((item) => (
                 <div key={item} className="  bg-red-400 w-full  h-[168px] rounded-lg">
                   {item}
@@ -40,17 +51,7 @@ export default function Feed() {
             </div>
           </Tab.Panel>
           <Tab.Panel>
-            <div className="grid  gap-2 grid-cols-2 ">
-              {['1', '2', '3', '4', '5', '6', '8'].map((item) => (
-                <div key={item} className="  bg-red-400 w-full  h-[168px] rounded-lg">
-                  {item}
-                </div>
-              ))}
-              <div></div>
-            </div>
-          </Tab.Panel>
-          <Tab.Panel>
-            <div className="grid  gap-2 grid-cols-2 ">
+            <div className="grid gap-3 grid-cols-2 ">
               {['1', '2', '3', '4', '5', '6', '8'].map((item) => (
                 <div key={item} className="  bg-red-400 w-full  h-[168px] rounded-lg">
                   {item}
