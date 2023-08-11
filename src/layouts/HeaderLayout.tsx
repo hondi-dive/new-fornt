@@ -21,7 +21,7 @@ export default function HeaderLayout({
   children,
 }: PropsWithChildren<Props>) {
   return (
-    <div>
+    <div className="min-h-screen">
       <Header
         title={title}
         backComponent={!!backComponent ? backComponent : <Header.Back path={backPath} />}
@@ -35,7 +35,7 @@ export default function HeaderLayout({
           ) : undefined
         }
       />
-      <div className="min-h-screen pt-16">{children}</div>
+      <div className="pt-16">{children}</div>
     </div>
   );
 }

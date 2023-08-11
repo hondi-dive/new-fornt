@@ -7,7 +7,7 @@ import HeaderLayout from '@/layouts/HeaderLayout';
 export default function FeedDetailLog() {
   return (
     <HeaderLayout title="로그 기록">
-      <div className=" px-6 py-[22px] mt-16">
+      <div className=" px-6 py-[22px]">
         <div className="flex justify-start">
           <IdBadge id="Cherisher_y" />
         </div>

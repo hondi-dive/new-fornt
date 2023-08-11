@@ -58,7 +58,7 @@ export default function Layout({ children, params }: LayoutProps) {
     alert('서비스 준비중 입니다.');
   };
   return (
-    <div className=" min-h-screen bg-[#567BFF]">
+    <div className=" bg-[#567BFF]">
       <HeaderLayout
         title={spot.title}
         nextComponent={
@@ -67,7 +67,7 @@ export default function Layout({ children, params }: LayoutProps) {
           </button>
         }
       >
-        <div className="h-screen w-full">{children}</div>
+        <div className=" w-full">{children}</div>
       </HeaderLayout>
     </div>
   );
