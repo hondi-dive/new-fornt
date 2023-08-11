@@ -20,7 +20,7 @@ export default function Feed() {
                     selected
                       ? 'bg-[#567BFF] text-white'
                       : 'border-[#92AAFD] border-2 border-solid bg-white text-[#7F7F7F]'
-                  } text-base outline-none flex items-center rounded-3xl py-1.5 px-4`}
+                  } text-base outline-none flex items-center rounded-3xl py-1.5 px-2`}
                 >
                   {tab}
                   <CheckCircle color={selected ? 'white' : '#7F7F7F'} />

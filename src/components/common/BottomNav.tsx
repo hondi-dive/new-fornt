@@ -7,7 +7,7 @@ import WriteIcon from '@/assets/icons/write.svg';
 export default function BottomNav() {
   return (
     <div
-      className="w-full h-20 px-16 flex bg-white justify-between py-6 absolute bottom-0 z-10"
+      className="w-full h-20 px-16 flex bg-white justify-between py-6  bottom-0 z-10 fixed"
       style={{
         borderRadius: '50px 50px 0px 0px',
       }}

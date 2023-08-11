@@ -57,7 +57,7 @@ export default function Layout({ children, params }: LayoutProps) {
   return (
     <>
       <HeaderLayout title={spot.title} backPath="/home">
-        <div className="h-screen w-full">{children}</div>
+        <div className="h-screen w-full px-3">{children}</div>
       </HeaderLayout>
       <BottomNav />
     </>
