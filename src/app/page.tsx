@@ -4,6 +4,9 @@ import { useRouter } from 'next/navigation';
 
 import useTimeout from '@/hooks/useTimeout';
 import LogoIcon from '@/assets/icons/logo.svg';
+import LeftHandIcon from '@/assets/icons/leftHand.svg';
+import RightHandIcon from '@/assets/icons/rightHand.svg';
+import PalmIcon from '@/assets/icons/palm.svg';
 
 export default function Page() {
   const router = useRouter();
@@ -19,6 +22,15 @@ export default function Page() {
         <div className="flex items-center">
           <LogoIcon />
           <span className=" ml-5 text-[80px] font-['SlowSlow'] text-white">이거바당</span>
+        </div>
+      </div>
+      <div className="animate-[rightHand_4s_linear_infinite] z-10">
+        <RightHandIcon />
+      </div>
+      <div className="relative flex justify-center items-center animate-[leftHand_4s_linear_infinite]">
+        <LeftHandIcon />
+        <div className="absolute">
+          <PalmIcon />
         </div>
       </div>
     </div>
