@@ -53,7 +53,7 @@ const HeaderBack = ({ path }: HeaderBackProps) => {
 
   const handleBack = () => {
     if (path) {
-      router.replace(path);
+      router.push(path);
     } else {
       router.back();
     }
