@@ -1,16 +1,12 @@
-'use client';
-
 import IdBadge from '@/components/page/feed/IdBadge';
 import SubTitleContainer from '@/components/common/SubTitleContainer';
 import Button from '@/components/common/Button';
-import Header from '@/components/common/Header';
 import Input from '@/components/common/Input';
+import HeaderLayout from '@/layouts/HeaderLayout';
 
 export default function FeedDetailLog() {
   return (
-    <div>
-      <Header title="로그 기록" backComponents={<Header.Back />} />
-
+    <HeaderLayout title="로그 기록">
       <div className=" px-6 py-[22px] mt-16">
         <div className="flex justify-start">
           <IdBadge id="Cherisher_y" />
@@ -66,7 +62,7 @@ export default function FeedDetailLog() {
               <Input disabled={true} _size="small" unit={'℃'} />
             </SubTitleContainer>
             <SubTitleContainer title="기온">
-              <Input disabled={true} _size="small" unit={'℃'} value={'Test'} />
+              <Input disabled={true} _size="small" unit={'℃'} />
             </SubTitleContainer>
           </div>
 
@@ -107,6 +103,6 @@ export default function FeedDetailLog() {
           </div>
         </div>
       </div>
-    </div>
+    </HeaderLayout>
   );
 }

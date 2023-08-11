@@ -1,7 +1,7 @@
 import React from 'react';
 
 import BottomNav from '@/components/common/BottomNav';
-import Header from '@/components/common/Header';
+import HeaderLayout from '@/layouts/HeaderLayout';
 
 interface LayoutProps {
   children: React.ReactNode;
@@ -56,8 +56,9 @@ export default function Layout({ children, params }: LayoutProps) {
 
   return (
     <>
-      <Header title={spot.title} />
-      <div className="h-screen w-full">{children}</div>
+      <HeaderLayout title={spot.title} backPath="/home">
+        <div className="h-screen w-full">{children}</div>
+      </HeaderLayout>
       <BottomNav />
     </>
   );
