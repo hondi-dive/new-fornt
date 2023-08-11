@@ -1,48 +1,62 @@
+'use client';
 import CaretLeftIcon from '@/assets/icons/CaretLeft.svg';
 import { useRouter } from 'next/navigation';
 import { ButtonHTMLAttributes, PropsWithChildren } from 'react';
 
 interface Props {
-  backComponents?: JSX.Element;
-  nextComponents?: JSX.Element;
+  backComponent?: JSX.Element;
+  nextComponent?: JSX.Element;
   title: string;
 }
 
-const Header = ({ title, backComponents, nextComponents }: Props) => {
+const Header = ({ title, backComponent, nextComponent }: Props) => {
   return (
-    <header className="flex justify-between items-center h-16 px-6 border-b-[#d9d9d9] border-solid border-b-[1px] bg-white">
-      <div className=" w-10 flex justify-start">{backComponents && backComponents}</div>
-
+    <header className="flex fixed top-0 w-full max-w-[393px] justify-between items-center h-16 px-6 border-b-[#d9d9d9] border-solid border-b-[1px] bg-white">
+      <div className=" w-10 flex justify-start">{backComponent && backComponent}</div>
       <span className="text-[17px]">{title}</span>
-
-      <div className="w-10 flex justify-end">{nextComponents && nextComponents}</div>
+      <div className="w-10 flex justify-end">{nextComponent && nextComponent}</div>
     </header>
   );
 };
 
 interface HeaderNextProps extends ButtonHTMLAttributes<HTMLButtonElement> {
-  onNextClick: () => void;
+  path: string;
 }
 
-const HeaderNext = ({ children, onNextClick, ...rest }: PropsWithChildren<HeaderNextProps>) => {
+const HeaderNext = ({ children, path, ...rest }: PropsWithChildren<HeaderNextProps>) => {
+  const router = useRouter();
+
+  const handleNext = () => {
+    router.push(path);
+  };
+
   return (
     <button
       className="text-[#426BFF] text-lg font-semibold disabled:text-[#d9d9d9]"
-      onClick={onNextClick}
+      onClick={handleNext}
       {...rest}
     >
       {children}
     </button>
   );
 };
+
 HeaderNext.displayName = 'Header.Next';
 Header.Next = HeaderNext;
 
-const HeaderBack = () => {
+interface HeaderBackProps {
+  path?: string;
+}
+
+const HeaderBack = ({ path }: HeaderBackProps) => {
   const router = useRouter();
 
   const handleBack = () => {
-    router.back();
+    if (path) {
+      router.replace(path);
+    } else {
+      router.back();
+    }
   };
 
   return (
