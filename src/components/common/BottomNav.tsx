@@ -12,14 +12,15 @@ export default function BottomNav() {
         borderRadius: '50px 50px 0px 0px',
       }}
     >
-      <div
+      <Link
+        href="/log"
         className="absolute left-[50%] bg-black rounded-[50%] w-[84px] h-[84px] inline-flex justify-center items-center top-0"
         style={{
           transform: 'translate(-50%, -50%)',
         }}
       >
         <WriteIcon />
-      </div>
+      </Link>
       <Link href="/home">
         <HomeIcon />
       </Link>
