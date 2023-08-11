@@ -35,7 +35,7 @@ export default function HeaderLayout({
           ) : undefined
         }
       />
-      <div className="mt-16">{children}</div>
+      <div className="min-h-screen pt-16">{children}</div>
     </div>
   );
 }
