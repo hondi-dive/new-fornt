@@ -12,6 +12,16 @@ module.exports = {
         'gradient-radial': 'radial-gradient(var(--tw-gradient-stops))',
         'gradient-conic': 'conic-gradient(from 180deg at 50% 50%, var(--tw-gradient-stops))',
       },
+      keyframes: {
+        rightHand: {
+          '0%, 100%': { transform: 'translate(200px, 0px)' },
+          '50%': { transform: 'translate(100px, 100px)' },
+        },
+        leftHand: {
+          '0%, 100%': { transform: 'translate(-150px, 0px)' },
+          '50%': { transform: 'translate(0px, 0px)' },
+        },
+      },
     },
   },
   plugins: [],

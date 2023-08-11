@@ -1,36 +1,20 @@
 'use client';
 
 import Image from 'next/image';
-
-import Header from '@/components/common/Header';
-import Share from '@/assets/icons/share.svg';
 import DumiImg from '@/assets/images/diving.png';
 import ArrowCircle from '@/assets/icons/arrowCircle.svg';
 import HashTag from '@/components/page/feed/HashTag';
 import Heart from '@/assets/icons/Heart';
 import Tooltip from '@/assets/icons/Tooltip';
+import Link from 'next/link';
 
 interface Props {
-  searchParams: { [key: string]: string | string[] | undefined };
+  params: { id: string };
 }
 
-export default function FeedDetail({ searchParams }: Props) {
-  const handleShare = () => {
-    console.log('공유하기');
-  };
-
+export default function FeedDetail({ params }: Props) {
   return (
-    <div className=" min-h-screen bg-[#567BFF]">
-      <Header
-        title={searchParams['place'] as string}
-        backComponents={<Header.Back />}
-        nextComponents={
-          <Header.Next onNextClick={handleShare}>
-            <Share />
-          </Header.Next>
-        }
-      />
-
+    <>
       <Image alt="feed image" src={DumiImg} />
 
       <div className="bg-white rounded-br-3xl rounded-bl-3xl px-6 py-[22px]">
@@ -65,9 +49,11 @@ export default function FeedDetail({ searchParams }: Props) {
       </div>
 
       <div className="flex justify-center items-center py-5">
-        <span className=" text-white text-lg mr-3">로그 기록 보러가기</span>
-        <ArrowCircle />
+        <Link href={`/feed/detail/log/${params.id}`} className="flex justify-center items-center">
+          <span className=" text-white text-lg mr-3">로그 기록 보러가기</span>
+          <ArrowCircle />
+        </Link>
       </div>
-    </div>
+    </>
   );
 }

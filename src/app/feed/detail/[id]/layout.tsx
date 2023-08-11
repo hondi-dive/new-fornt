@@ -1,7 +1,7 @@
+'use client';
 import React from 'react';
-
-import BottomNav from '@/components/common/BottomNav';
 import HeaderLayout from '@/layouts/HeaderLayout';
+import Share from '@/assets/icons/share.svg';
 
 interface LayoutProps {
   children: React.ReactNode;
@@ -54,12 +54,21 @@ export default function Layout({ children, params }: LayoutProps) {
 
   const spot = positions.find((position) => position.id === Number(params.id)) ?? { title: '' };
 
+  const handleShare = () => {
+    alert('서비스 준비중 입니다.');
+  };
   return (
-    <>
-      <HeaderLayout title={spot.title} backPath="/home">
+    <div className=" min-h-screen bg-[#567BFF]">
+      <HeaderLayout
+        title={spot.title}
+        nextComponent={
+          <button onClick={handleShare}>
+            <Share />
+          </button>
+        }
+      >
         <div className="h-screen w-full">{children}</div>
       </HeaderLayout>
-      <BottomNav />
-    </>
+    </div>
   );
 }
