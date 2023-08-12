@@ -141,7 +141,6 @@ const KakaoMap = () => {
             address: positions[i].address,
             id: positions[i].id,
           });
-          console.log(positions[i].title);
         });
       }
 
@@ -170,7 +169,7 @@ const KakaoMap = () => {
     const foundItem = positions.find((item) => item.title.includes(searchText)) as any;
 
     if (map && foundItem) {
-      const moveLatLon = new window.kakao.maps.LatLng(foundItem?.latlng.Ma, foundItem?.latlng.La);
+      const moveLatLon = new window.kakao.maps.LatLng(foundItem?.lat, foundItem?.lng);
 
       map.panTo(moveLatLon);
     } else {
