@@ -26,11 +26,7 @@ export default function LogDetail() {
           totalProgress={2}
           text={`경험을 담아서\n나만의 로그를 작성해볼까요?`}
         />
-        <StepContainer step={6} title="해시태그 등록">
-          <Input placeholder="#해시태그" />
-        </StepContainer>
-
-        <StepContainer step={7} title="로그데이터 선택">
+        <StepContainer step={8} title="로그데이터 선택">
           <SubTitleContainer title="입수형태">
             <div className="flex gap-3">
               <Button size="small" color="secondary">
@@ -74,7 +70,7 @@ export default function LogDetail() {
           </SubTitleContainer>
         </StepContainer>
 
-        <StepContainer step={8} title="로그데이터 기록">
+        <StepContainer step={9} title="로그데이터 기록">
           <div className="flex gap-[17px]">
             <SubTitleContainer title="수온">
               <Input style={{ textAlign: 'right' }} _size="small" unit={'℃'} />
