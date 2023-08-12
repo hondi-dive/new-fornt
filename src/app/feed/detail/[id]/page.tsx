@@ -3,10 +3,13 @@
 import Image from 'next/image';
 import DumiImg from '@/assets/images/diving.png';
 import ArrowCircle from '@/assets/icons/arrowCircle.svg';
+import HandsClapping from '@/assets/icons/handsClapping.svg';
 import HashTag from '@/components/page/feed/HashTag';
 import Heart from '@/assets/icons/Heart';
 import Tooltip from '@/assets/icons/Tooltip';
 import Link from 'next/link';
+import IdBadge from '@/components/page/feed/IdBadge';
+import Satisfaction from '@/components/page/log/Satisfaction';
 
 interface Props {
   params: { id: string };
@@ -15,13 +18,20 @@ interface Props {
 export default function FeedDetail({ params }: Props) {
   return (
     <>
-      <Image alt="feed image" src={DumiImg} />
+      <div className="relative">
+        <div className="absolute left-[22px] top-[22px]">
+          <IdBadge id="Cherisher_y" />
+        </div>
+        <Image alt="feed image" src={DumiImg} />
+      </div>
 
       <div className="bg-white rounded-br-3xl rounded-bl-3xl px-6 py-[22px]">
         <div className="flex justify-between items-end">
           <span className="flex items-center">
             <h2 className=" text-2xl font-bold">스쿠버다이빙</h2>
-            <span className=" ml-3 text-xl">4/5점</span>
+            <span className=" ml-3 text-xl">
+              <Satisfaction size="small" value={2} />
+            </span>
           </span>
           <span className="text-[#7f7f7f] text-sm">2023.08.05</span>
         </div>
@@ -42,7 +52,7 @@ export default function FeedDetail({ params }: Props) {
             <span>12</span>
           </div>
           <div className="flex items-center gap-1">
-            <Heart size={28} isFill={false} />
+            <HandsClapping />
             <span>12</span>
           </div>
         </div>

@@ -2,9 +2,10 @@ import SearchIcon from '@/assets/icons/search.svg';
 
 interface SearchInputProps {
   placeholder: string;
+  onChange: (e: React.ChangeEvent<HTMLInputElement>) => void;
 }
 
-export default function SearchInput({ placeholder }: SearchInputProps) {
+export default function SearchInput({ placeholder, onChange }: SearchInputProps) {
   return (
     <div className="w-full">
       <div className="relative h-[60px]">
@@ -15,6 +16,7 @@ export default function SearchInput({ placeholder }: SearchInputProps) {
           className="py-2 pl-16 h-[60px]  cursor-pointer w-full pr-12  bg-white placeholder-[#7F7F7F] rounded-[32px] placeholder-font-medium border-[#D9D9D9] border-solid border text-lg"
           placeholder={placeholder}
           name="todayLink"
+          onChange={onChange}
         />
       </div>
     </div>

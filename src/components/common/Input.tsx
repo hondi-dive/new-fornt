@@ -17,10 +17,7 @@ export default function Input({ _size = 'medium', unit, ...rest }: Props) {
         rest.disabled ? 'bg-[#e9eaf4]' : 'border-solid border-[1px] border-[rgb(165,165,165)]'
       } ${INPUT_SIZE[_size]}`}
     >
-      <input
-        className=" w-full outline-none disabled:bg-transparent text-right text-sm"
-        {...rest}
-      />
+      <input className=" w-full outline-none disabled:bg-transparent text-sm" {...rest} />
       {unit && (
         <span
           className={`font-medium ml-1 text-sm ${rest.disabled ? 'text-black' : 'text-[#a5a5a5]'}`}
