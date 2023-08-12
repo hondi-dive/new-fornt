@@ -1,11 +1,22 @@
 'use client';
 
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 
 import Heart from '@/assets/icons/Heart';
 
-export default function Satisfaction() {
+interface Props {
+  size?: 'medium' | 'small';
+  value?: number;
+}
+
+export default function Satisfaction({ size = 'medium', value }: Props) {
   const [satisfaction, setSatisfaction] = useState(0);
+
+  useEffect(() => {
+    if (!!value) {
+      setSatisfaction(value);
+    }
+  }, [value]);
 
   const handleClick = (value: number) => {
     setSatisfaction((prev) => {
@@ -18,18 +29,18 @@ export default function Satisfaction() {
   };
 
   return (
-    <div className="relative h-[50px] flex items-center w-full border-[1px] border-[#d9d9d9] border-solid rounded-lg justify-center gap-2">
+    <div className={` flex items-center  justify-center ${size === 'medium' && 'gap-2'}`}>
       {Array.from({ length: 5 }, (_, i) => {
         if (satisfaction >= i + 1) {
           return (
-            <button key={i} onClick={() => handleClick(i + 1)}>
-              <Heart isFill={true} />
+            <button key={i} onClick={!value ? () => handleClick(i + 1) : undefined}>
+              <Heart isFill={true} size={size === 'medium' ? 33 : 20} />
             </button>
           );
         } else {
           return (
-            <button key={i} onClick={() => handleClick(i + 1)}>
-              <Heart />
+            <button key={i} onClick={!value ? () => handleClick(i + 1) : undefined}>
+              <Heart size={size === 'medium' ? 33 : 20} />
             </button>
           );
         }

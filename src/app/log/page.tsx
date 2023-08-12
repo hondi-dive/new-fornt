@@ -39,7 +39,9 @@ export default function Log() {
         </StepContainer>
 
         <StepContainer step={4} title="만족도 선택">
-          <Satisfaction />
+          <div className="h-[50px] w-full border-[1px] border-[#d9d9d9] border-solid rounded-lg flex items-center justify-center">
+            <Satisfaction />
+          </div>
         </StepContainer>
 
         <StepContainer step={5} title="등록할 사진선택">
