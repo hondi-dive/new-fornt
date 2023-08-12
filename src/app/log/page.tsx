@@ -7,6 +7,7 @@ import Button from '@/components/common/Button';
 import Select from '@/components/common/Select';
 import HeaderLayout from '@/layouts/HeaderLayout';
 import ProgressTitle from '@/components/page/log/ProgressTitle';
+import Input from '@/components/common/Input';
 
 export default function Log() {
   return (
@@ -43,6 +44,14 @@ export default function Log() {
 
         <StepContainer step={5} title="등록할 사진선택">
           <ImageUploader />
+        </StepContainer>
+
+        <StepContainer step={6} title="해시태그 등록">
+          <Input placeholder="# 해시태그" />
+        </StepContainer>
+
+        <StepContainer step={7} title="한줄후기 입력">
+          <Input placeholder="한줄후기 입력" />
         </StepContainer>
         <div className=" h-24" />
       </div>
