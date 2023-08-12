@@ -88,12 +88,15 @@ declare global {
   interface Window {
     kakao: {
       maps: {
+        MarkerImage: any;
+        Point: any;
+        Size: any;
         Map: new (
           container: HTMLDivElement,
           options: { center: KakaoLatLng; level: number },
         ) => KakaoMap;
         LatLng: new (lat: number, lng: number) => KakaoLatLng;
-        Marker: new (options: { position: any; map?: any }) => KakaoMarker;
+        Marker: new (options: { position: any; map?: any; image?: any }) => KakaoMarker;
         InfoWindow: new (options?: { content?: string; removable?: boolean }) => KakaoInfoWindow;
         event: any;
         load: any;
@@ -127,10 +130,16 @@ const KakaoMap = () => {
         level: 9,
       });
 
+      var imageSrc = 'https://i.postimg.cc/JngP3T7J/spot.png',
+        imageSize = new window.kakao.maps.Size(48, 48),
+        imageOption = { offset: new window.kakao.maps.Point(24, 48) };
+      var markerImage = new window.kakao.maps.MarkerImage(imageSrc, imageSize, imageOption);
+
       for (let i = 0; i < positions.length; i++) {
         const marker = new window.kakao.maps.Marker({
           map: map,
           position: new window.kakao.maps.LatLng(positions[i].lat, positions[i].lng),
+          image: markerImage,
         });
 
         window.kakao.maps.event.addListener(marker, 'click', () => {
