@@ -3,6 +3,7 @@ import SubTitleContainer from '@/components/common/SubTitleContainer';
 import Button from '@/components/common/Button';
 import Input from '@/components/common/Input';
 import HeaderLayout from '@/layouts/HeaderLayout';
+import InputWithUnit from '@/components/common/InputWithUnit';
 
 export default function FeedDetailLog() {
   return (
@@ -59,44 +60,44 @@ export default function FeedDetailLog() {
         <div className=" mt-10">
           <div className="flex gap-[17px]">
             <SubTitleContainer title="수온">
-              <Input style={{ textAlign: 'right' }} disabled={true} _size="small" unit={'℃'} />
+              <InputWithUnit disabled={true} _size="small" unit={'℃'} />
             </SubTitleContainer>
             <SubTitleContainer title="기온">
-              <Input style={{ textAlign: 'right' }} disabled={true} _size="small" unit={'℃'} />
+              <InputWithUnit disabled={true} _size="small" unit={'℃'} />
             </SubTitleContainer>
           </div>
 
           <div className="flex gap-[17px]">
             <SubTitleContainer title="입수전 잔량">
-              <Input style={{ textAlign: 'right' }} disabled={true} _size="small" unit={'bar'} />
+              <InputWithUnit disabled={true} _size="small" unit={'bar'} />
             </SubTitleContainer>
             <SubTitleContainer title="입수후 잔량">
-              <Input style={{ textAlign: 'right' }} disabled={true} _size="small" unit={'bar'} />
+              <InputWithUnit disabled={true} _size="small" unit={'bar'} />
             </SubTitleContainer>
           </div>
 
           <div className="flex gap-[17px]">
             <SubTitleContainer title="다이브 최고수심">
-              <Input style={{ textAlign: 'right' }} disabled={true} _size="small" unit={'m'} />
+              <InputWithUnit disabled={true} _size="small" unit={'m'} />
             </SubTitleContainer>
             <SubTitleContainer title="포인트 수심">
-              <Input style={{ textAlign: 'right' }} disabled={true} _size="small" unit={'m'} />
+              <InputWithUnit disabled={true} _size="small" unit={'m'} />
             </SubTitleContainer>
           </div>
 
           <div className="flex gap-[17px]">
             <SubTitleContainer title="다이브 시간">
-              <Input style={{ textAlign: 'right' }} disabled={true} _size="small" unit={'분'} />
+              <InputWithUnit disabled={true} _size="small" unit={'분'} />
             </SubTitleContainer>
             <SubTitleContainer title="감압시간">
-              <Input style={{ textAlign: 'right' }} disabled={true} _size="small" unit={'분'} />
+              <InputWithUnit disabled={true} _size="small" unit={'분'} />
             </SubTitleContainer>
           </div>
 
           <div className="flex gap-[17px]">
             <div className="w-full">
               <SubTitleContainer title="시야">
-                <Input style={{ textAlign: 'right' }} disabled={true} _size="small" unit={'m'} />
+                <InputWithUnit disabled={true} _size="small" unit={'m'} />
               </SubTitleContainer>
             </div>
             <div className="w-full" />

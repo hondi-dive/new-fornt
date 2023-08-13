@@ -1,6 +1,6 @@
 'use client';
+import XIcon from '@/assets/icons/XIcon';
 import Plus from '@/assets/icons/plus.svg';
-import XIcon from '@/assets/icons/xIcon.svg';
 import useWindowSize from '@/hooks/useWindowSize';
 import Image from 'next/image';
 import { ChangeEvent, useRef, useState } from 'react';
