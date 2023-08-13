@@ -5,6 +5,7 @@ import Input from '@/components/common/Input';
 import HeaderLayout from '@/layouts/HeaderLayout';
 import ProgressTitle from '@/components/page/log/ProgressTitle';
 import Link from 'next/link';
+import InputWithUnit from '@/components/common/InputWithUnit';
 
 export default function LogDetail() {
   return (
@@ -73,44 +74,44 @@ export default function LogDetail() {
         <StepContainer step={9} title="로그데이터 기록">
           <div className="flex gap-[17px]">
             <SubTitleContainer title="수온">
-              <Input style={{ textAlign: 'right' }} _size="small" unit={'℃'} />
+              <InputWithUnit _size="small" unit={'℃'} />
             </SubTitleContainer>
             <SubTitleContainer title="기온">
-              <Input style={{ textAlign: 'right' }} _size="small" unit={'℃'} />
+              <InputWithUnit _size="small" unit={'℃'} />
             </SubTitleContainer>
           </div>
 
           <div className="flex gap-[17px]">
             <SubTitleContainer title="입수전 잔량">
-              <Input style={{ textAlign: 'right' }} _size="small" unit={'bar'} />
+              <InputWithUnit _size="small" unit={'bar'} />
             </SubTitleContainer>
             <SubTitleContainer title="입수후 잔량">
-              <Input style={{ textAlign: 'right' }} _size="small" unit={'bar'} />
+              <InputWithUnit _size="small" unit={'bar'} />
             </SubTitleContainer>
           </div>
 
           <div className="flex gap-[17px]">
             <SubTitleContainer title="다이브 최고수심">
-              <Input style={{ textAlign: 'right' }} _size="small" unit={'m'} />
+              <InputWithUnit _size="small" unit={'m'} />
             </SubTitleContainer>
             <SubTitleContainer title="포인트 수심">
-              <Input style={{ textAlign: 'right' }} _size="small" unit={'m'} />
+              <InputWithUnit _size="small" unit={'m'} />
             </SubTitleContainer>
           </div>
 
           <div className="flex gap-[17px]">
             <SubTitleContainer title="다이브 시간">
-              <Input style={{ textAlign: 'right' }} _size="small" unit={'분'} />
+              <InputWithUnit _size="small" unit={'분'} />
             </SubTitleContainer>
             <SubTitleContainer title="감압시간">
-              <Input style={{ textAlign: 'right' }} _size="small" unit={'분'} />
+              <InputWithUnit _size="small" unit={'분'} />
             </SubTitleContainer>
           </div>
 
           <div className="flex gap-[17px]">
             <div className="w-full">
               <SubTitleContainer title="시야">
-                <Input style={{ textAlign: 'right' }} _size="small" unit={'m'} />
+                <InputWithUnit _size="small" unit={'m'} />
               </SubTitleContainer>
             </div>
             <div className="w-full" />
