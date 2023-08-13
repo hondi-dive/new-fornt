@@ -1,6 +1,6 @@
 'use client';
+import XIcon from '@/assets/icons/XIcon';
 import Plus from '@/assets/icons/plus.svg';
-import XIcon from '@/assets/icons/xIcon.svg';
 import useWindowSize from '@/hooks/useWindowSize';
 import Image from 'next/image';
 import { ChangeEvent, useRef, useState } from 'react';
@@ -8,7 +8,7 @@ import { ChangeEvent, useRef, useState } from 'react';
 export default function ImageUploader() {
   const fileInputRef = useRef<HTMLInputElement>(null);
   const windowSize = useWindowSize();
-  const size = (windowSize?.width ? windowSize.width : 393) - 48;
+  const size = (windowSize?.width || 393) - 48;
 
   const [image, setImage] = useState('');
   const [imageForm, setImageForm] = useState<FormData>();
@@ -46,7 +46,7 @@ export default function ImageUploader() {
   return (
     <div
       style={{ height: `${size}px`, width: `${size}px` }}
-      className={`max-w-[393px] max-h-[393px] w-full h-full relative rounded-lg flex justify-center items-center bg-[#f3f4f9] overflow-hidden`}
+      className={`max-w-[345px] max-h-[345px] w-full h-full relative rounded-lg flex justify-center items-center bg-[#f3f4f9] overflow-hidden`}
     >
       <input
         type="file"

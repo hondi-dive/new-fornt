@@ -49,11 +49,11 @@ export default function Log() {
         </StepContainer>
 
         <StepContainer step={6} title="해시태그 등록">
-          <Input placeholder="# 해시태그" />
+          <Input placeholder="# 해시태그" style={{ border: '1px solid #a5a5a5' }} />
         </StepContainer>
 
         <StepContainer step={7} title="한줄후기 입력">
-          <Input placeholder="한줄후기 입력" />
+          <Input placeholder="한줄후기 입력" style={{ border: '1px solid #a5a5a5' }} />
         </StepContainer>
         <div className=" h-24" />
       </div>
