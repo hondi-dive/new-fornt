@@ -124,13 +124,13 @@ const KakaoMap = () => {
 
   const initMap = useCallback(() => {
     if (containerRef.current) {
-      const center = new window.kakao.maps.LatLng(33.365216, 126.200269);
+      const center = new window.kakao.maps.LatLng(33.4, 126.55);
       const map = new window.kakao.maps.Map(containerRef.current, {
         center,
-        level: 9,
+        level: 10,
       });
 
-      var imageSrc = 'https://i.postimg.cc/JngP3T7J/spot.png',
+      var imageSrc = 'https://i.postimg.cc/qMRDLNNg/spot.png',
         imageSize = new window.kakao.maps.Size(48, 48),
         imageOption = { offset: new window.kakao.maps.Point(24, 48) };
       var markerImage = new window.kakao.maps.MarkerImage(imageSrc, imageSize, imageOption);
@@ -153,12 +153,7 @@ const KakaoMap = () => {
         });
       }
 
-      const markerPosition = center;
-      const marker = new window.kakao.maps.Marker({
-        position: markerPosition,
-      });
       setMap(map);
-      marker.setMap(map);
     }
   }, []);
 
