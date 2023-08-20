@@ -2,7 +2,7 @@ import { ButtonHTMLAttributes, Ref, forwardRef } from 'react';
 
 interface Props extends ButtonHTMLAttributes<HTMLButtonElement> {
   size?: 'medium' | 'small';
-  color?: 'primary' | 'secondary' | 'normal';
+  color?: 'primary' | 'secondary' | 'selected' | 'normal';
 }
 
 const Button = forwardRef((props: Props, forwardRef: Ref<HTMLButtonElement>) => {
@@ -11,6 +11,7 @@ const Button = forwardRef((props: Props, forwardRef: Ref<HTMLButtonElement>) => 
   const BUTTON_COLOR = {
     primary: 'bg-[#567BFF]',
     secondary: 'bg-[#92aafd]',
+    selected: 'bg-[#E9EAF4]',
     normal: 'bg-white border-solid border-[1px] border-[#92aafd]',
   };
 

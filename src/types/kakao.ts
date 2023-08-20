@@ -3,6 +3,7 @@ export type KakaoLatLng = { getLat: () => number; getLng: () => number };
 export type KakaoMap = {
   panTo(moveLatLon: KakaoLatLng): unknown;
   setCenter: (latlng: KakaoLatLng) => void;
+  getCenter: () => KakaoLatLng;
 };
 
 export type KakaoMarker = {

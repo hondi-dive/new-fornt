@@ -7,14 +7,87 @@ import Select from '@/components/common/Select';
 import HeaderLayout from '@/layouts/HeaderLayout';
 import ProgressTitle from '@/components/page/log/ProgressTitle';
 import Input from '@/components/common/Input';
-import { useState } from 'react';
+import { useCallback, useEffect, useRef, useState } from 'react';
 import SubTitleContainer from '@/components/common/SubTitleContainer';
 import InputWithUnit from '@/components/common/InputWithUnit';
 import Link from 'next/link';
 import CaretLeftIcon from '@/assets/icons/CaretLeft.svg';
+import Spot from '@/assets/icons/spot.svg';
+import Script from 'next/script';
+import { KakaoLatLng, KakaoMap } from '@/types/kakao';
+import PlacePicker from '@/components/page/log/PlacePicker';
+import { LogData } from '@/types/log';
+
+const NEXT_PUBLIC_KAKAO_KEY = process.env.NEXT_PUBLIC_KAKAO_APP_KEY;
 
 export default function Log() {
+  const mapRef = useRef<HTMLDivElement>(null);
   const [pageType, setPageType] = useState<'log' | 'logDetail'>('log');
+  const [placeModal, setPlaceModal] = useState(false);
+  const [latLng, setLatLng] = useState({ lat: 33.378306, lng: 126.5424 });
+  const [address, setAddress] = useState('제주특별자치도 제주시 아라동');
+  const [logData, setLogData] = useState<LogData>({
+    place: '',
+    date: new Date().toISOString().substring(0, 10),
+    type: 'scuba',
+    satisfaction: 0,
+    hashTag: [],
+    comment: '',
+  });
+
+  const displayCenterInfo = (result: any, status: any) => {
+    if (status === window.kakao.maps.services.Status.OK) {
+      for (var i = 0; i < result.length; i++) {
+        if (result[i].region_type === 'H') {
+          setAddress(result[i].address_name);
+          break;
+        }
+      }
+    }
+  };
+
+  const searchAddrFromCoords = (
+    coords: KakaoLatLng,
+    callback: (result: any, status: any) => void,
+  ) => {
+    const geocoder = new window.kakao.maps.services.Geocoder();
+    geocoder.coord2RegionCode(coords.getLng(), coords.getLat(), callback);
+  };
+
+  const initMap = useCallback(() => {
+    let centerChange: KakaoMap;
+    if (mapRef.current) {
+      const mapOption = {
+        center: new window.kakao.maps.LatLng(33.376692, 126.54222),
+        level: 11,
+      };
+
+      const map = new window.kakao.maps.Map(mapRef.current, mapOption);
+
+      centerChange = window.kakao.maps.event.addListener(map, 'center_changed', () => {
+        const coords = map.getCenter();
+        setLatLng({ lat: coords.getLat(), lng: coords.getLng() });
+        searchAddrFromCoords(coords, displayCenterInfo);
+      });
+    }
+
+    return () => window.kakao.maps.event.removeListener(centerChange);
+  }, [mapRef]);
+
+  useEffect(() => {
+    if (placeModal) {
+      initMap();
+    }
+  }, [placeModal, initMap]);
+
+  const updateLogData = (key: keyof LogData, value: string | number | string[]) => {
+    setLogData((prev) => ({ ...prev, [key]: value }));
+  };
+
+  const handleClickPlaceAdd = () => {
+    updateLogData('place', address);
+    setPlaceModal(false);
+  };
 
   return (
     <HeaderLayout
@@ -44,6 +117,29 @@ export default function Log() {
         ) : undefined
       }
     >
+      {placeModal && (
+        <PlacePicker showModal={placeModal} setShowModal={setPlaceModal}>
+          <div className="relative flex justify-center items-center">
+            <div className="absolute z-40 mb-10">
+              <Spot />
+            </div>
+            <div className="w-1 h-1 bg-red-600 absolute z-50" />
+
+            <Script
+              src={`https://dapi.kakao.com/v2/maps/sdk.js?appkey=${NEXT_PUBLIC_KAKAO_KEY}&autoload=false&libraries=services`}
+              onLoad={() => window.kakao.maps.load(initMap)}
+            />
+            <div
+              ref={mapRef}
+              className="w-full h-[350px] mb-5 relative justify-center items-center"
+            />
+          </div>
+          <div>{address}</div>
+          <Button size="small" onClick={handleClickPlaceAdd}>
+            <div className="text-white">확인</div>
+          </Button>
+        </PlacePicker>
+      )}
       <div className="p-6 flex flex-col gap-[42px]">
         <ProgressTitle
           currProgress={pageType === 'log' ? 1 : 2}
@@ -54,9 +150,15 @@ export default function Log() {
         {pageType === 'log' ? (
           <>
             <StepContainer step={1} title="바다장소 등록">
-              <Button onClick={() => console.log('test')}>
-                <span className=" text-lg text-white">장소등록</span>
-              </Button>
+              {logData.place ? (
+                <Button color="selected" onClick={() => setPlaceModal(true)}>
+                  <span className=" text-lg text-[#426BFF]">{logData.place}</span>
+                </Button>
+              ) : (
+                <Button onClick={() => setPlaceModal(true)}>
+                  <span className=" text-lg text-white">장소등록</span>
+                </Button>
+              )}
             </StepContainer>
 
             <StepContainer step={2} title="등록날짜 입력">
