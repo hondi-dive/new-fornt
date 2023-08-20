@@ -17,11 +17,14 @@ import Script from 'next/script';
 import { KakaoLatLng, KakaoMap } from '@/types/kakao';
 import PlacePicker from '@/components/page/log/PlacePicker';
 import { LogData } from '@/types/log';
+import ArrowDown from '@/assets/icons/arrowDown.svg';
+import { convertDashToKorean } from '@/utils/format';
 
 const NEXT_PUBLIC_KAKAO_KEY = process.env.NEXT_PUBLIC_KAKAO_APP_KEY;
 
 export default function Log() {
   const mapRef = useRef<HTMLDivElement>(null);
+  const dateRef = useRef<HTMLInputElement>(null);
   const [pageType, setPageType] = useState<'log' | 'logDetail'>('log');
   const [placeModal, setPlaceModal] = useState(false);
   const [latLng, setLatLng] = useState({ lat: 33.378306, lng: 126.5424 });
@@ -95,6 +98,7 @@ export default function Log() {
       nextComponent={
         pageType === 'log' ? (
           <button
+            disabled={!logData.place}
             onClick={() => setPageType('logDetail')}
             className="text-[#426BFF] text-lg font-semibold disabled:text-[#d9d9d9]"
           >
@@ -162,14 +166,27 @@ export default function Log() {
             </StepContainer>
 
             <StepContainer step={2} title="등록날짜 입력">
-              <Select>
-                <option>2023년 8월 5일</option>
-                <option>test2</option>
-              </Select>
+              <button
+                className={`relative h-[50px] flex items-center w-full border-[1px] border-[#d9d9d9] border-solid rounded-lg justify-center`}
+                onClick={() => dateRef?.current && dateRef.current.showPicker()}
+              >
+                <span className={`text-[17px] ${!logData.place ? 'text-[#7f7f7f]' : 'text-black'}`}>
+                  {convertDashToKorean(logData.date)}
+                </span>
+                <div className="absolute right-7">
+                  <ArrowDown />
+                </div>
+                <input
+                  ref={dateRef}
+                  type="date"
+                  className="absolute bottom-0 left-0 opacity-0"
+                  onChange={(e) => updateLogData('date', e.target.value)}
+                />
+              </button>
             </StepContainer>
 
             <StepContainer step={3} title="활동유형 선택">
-              <Select>
+              <Select disabled={!logData.place}>
                 <option>스쿠버 다이빙</option>
                 <option>test2</option>
               </Select>
