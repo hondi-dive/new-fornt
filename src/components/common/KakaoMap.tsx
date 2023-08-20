@@ -100,6 +100,7 @@ declare global {
         InfoWindow: new (options?: { content?: string; removable?: boolean }) => KakaoInfoWindow;
         event: any;
         load: any;
+        services: any;
       };
     };
   }
