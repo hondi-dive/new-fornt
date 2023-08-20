@@ -186,10 +186,15 @@ export default function Log() {
             </StepContainer>
 
             <StepContainer step={3} title="활동유형 선택">
-              <Select disabled={!logData.place}>
-                <option>스쿠버 다이빙</option>
-                <option>test2</option>
-              </Select>
+              <Select
+                disabled={!logData.place}
+                data={[
+                  ['scuba', '스쿠버 다이빙'],
+                  ['free', '프리 다이빙'],
+                  ['snorkeling', '스노클링'],
+                ]}
+                onChange={(value) => updateLogData('type', value)}
+              />
             </StepContainer>
 
             <StepContainer step={4} title="만족도 선택">
