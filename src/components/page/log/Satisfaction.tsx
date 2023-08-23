@@ -7,9 +7,10 @@ import Heart from '@/assets/icons/Heart';
 interface Props {
   size?: 'medium' | 'small';
   value?: number;
+  onChange?: (value: number) => void;
 }
 
-export default function Satisfaction({ size = 'medium', value }: Props) {
+export default function Satisfaction({ size = 'medium', value, onChange }: Props) {
   const [satisfaction, setSatisfaction] = useState(0);
 
   useEffect(() => {
@@ -21,8 +22,10 @@ export default function Satisfaction({ size = 'medium', value }: Props) {
   const handleClick = (value: number) => {
     setSatisfaction((prev) => {
       if (prev === value) {
+        if (onChange) onChange(0);
         return 0;
       } else {
+        if (onChange) onChange(value);
         return value;
       }
     });

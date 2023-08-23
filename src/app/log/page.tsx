@@ -19,6 +19,7 @@ import PlacePicker from '@/components/page/log/PlacePicker';
 import { LogData } from '@/types/log';
 import ArrowDown from '@/assets/icons/arrowDown.svg';
 import { convertDashToKorean } from '@/utils/format';
+import LogDataSelector from '@/components/page/log/LogDataSelector';
 
 const NEXT_PUBLIC_KAKAO_KEY = process.env.NEXT_PUBLIC_KAKAO_APP_KEY;
 
@@ -32,11 +33,29 @@ export default function Log() {
   const [logData, setLogData] = useState<LogData>({
     place: '',
     date: new Date().toISOString().substring(0, 10),
-    type: 'scuba',
+    divingType: 'scuba',
     satisfaction: 0,
     hashTag: [],
     comment: '',
+    equipmentType: 'coast',
+    surfaceCurrentType: 'strong',
+    deepCurrentType: 'strong',
+    waterTemp: undefined,
+    temp: undefined,
+    beforeBar: undefined,
+    afterBar: undefined,
+    diveDeepest: undefined,
+    pointDepth: undefined,
+    diveTime: undefined,
+    decompressionTime: undefined,
+    visualField: undefined,
   });
+
+  const TYPE_SELECT_DATA = [
+    { id: 1, displayValue: '스쿠버 다이빙', selectedValue: 'scuba' },
+    { id: 2, displayValue: '프리 다이빙', selectedValue: 'free' },
+    { id: 3, displayValue: '스노클링', selectedValue: 'snorkeling' },
+  ];
 
   const displayCenterInfo = (result: any, status: any) => {
     if (status === window.kakao.maps.services.Status.OK) {
@@ -59,7 +78,7 @@ export default function Log() {
 
   const initMap = useCallback(() => {
     let centerChange: KakaoMap;
-    if (mapRef.current) {
+    if (mapRef.current && window?.kakao) {
       const mapOption = {
         center: new window.kakao.maps.LatLng(33.376692, 126.54222),
         level: 11,
@@ -90,6 +109,33 @@ export default function Log() {
   const handleClickPlaceAdd = () => {
     updateLogData('place', address);
     setPlaceModal(false);
+  };
+
+  const handleClickDivingType = (value: {
+    id: number | string;
+    selectedValue: string;
+    displayValue: string;
+  }) => {
+    updateLogData('divingType', value.selectedValue);
+    initLogData();
+  };
+
+  const initLogData = () => {
+    setLogData((prev) => ({
+      ...prev,
+      equipmentType: 'coast',
+      surfaceCurrentType: 'strong',
+      deepCurrentType: 'strong',
+      waterTemp: undefined,
+      temp: undefined,
+      beforeBar: undefined,
+      afterBar: undefined,
+      diveDeepest: undefined,
+      pointDepth: undefined,
+      diveTime: undefined,
+      decompressionTime: undefined,
+      visualField: undefined,
+    }));
   };
 
   return (
@@ -188,18 +234,15 @@ export default function Log() {
             <StepContainer step={3} title="활동유형 선택">
               <Select
                 disabled={!logData.place}
-                data={[
-                  ['scuba', '스쿠버 다이빙'],
-                  ['free', '프리 다이빙'],
-                  ['snorkeling', '스노클링'],
-                ]}
-                onChange={(value) => updateLogData('type', value)}
+                data={TYPE_SELECT_DATA}
+                value={TYPE_SELECT_DATA.filter((d) => d.selectedValue === logData.divingType)[0]}
+                onChange={handleClickDivingType}
               />
             </StepContainer>
 
             <StepContainer step={4} title="만족도 선택">
               <div className="h-[50px] w-full border-[1px] border-[#d9d9d9] border-solid rounded-lg flex items-center justify-center">
-                <Satisfaction />
+                <Satisfaction onChange={(value) => updateLogData('satisfaction', value)} />
               </div>
             </StepContainer>
 
@@ -208,100 +251,197 @@ export default function Log() {
             </StepContainer>
 
             <StepContainer step={6} title="해시태그 등록">
-              <Input placeholder="# 해시태그" style={{ border: '1px solid #a5a5a5' }} />
+              <Input
+                placeholder="# 해시태그"
+                style={{ border: '1px solid #a5a5a5' }}
+                onChange={(e) => updateLogData('hashTag', e.target.value)}
+              />
             </StepContainer>
 
             <StepContainer step={7} title="한줄후기 입력">
-              <Input placeholder="한줄후기 입력" style={{ border: '1px solid #a5a5a5' }} />
+              <Input
+                placeholder="한줄후기 입력"
+                style={{ border: '1px solid #a5a5a5' }}
+                onChange={(e) => updateLogData('comment', e.target.value)}
+              />
             </StepContainer>
           </>
         ) : (
           <>
-            <StepContainer step={8} title="로그데이터 선택">
-              <SubTitleContainer title="입수형태">
-                <div className="flex gap-3">
-                  <Button size="small" color="secondary">
-                    <span className=" font-medium text-white">해안</span>
-                  </Button>
-                  <Button size="small" color="normal">
-                    <span className=" font-medium text-black">보트</span>
-                  </Button>
-                  <Button size="small" color="normal">
-                    <span className=" font-medium text-black">기타</span>
-                  </Button>
+            {(logData.divingType === 'free' || logData.divingType === 'scuba') && (
+              <StepContainer step={8} title="로그데이터 선택">
+                <LogDataSelector
+                  title="입수 형태"
+                  value={logData.equipmentType || ''}
+                  selectedData={[
+                    {
+                      selectedValue: 'coast',
+                      displayValue: '해안',
+                      onClick: () => updateLogData('equipmentType', 'coast'),
+                    },
+                    {
+                      selectedValue: 'boat',
+                      displayValue: '보트',
+                      onClick: () => updateLogData('equipmentType', 'boat'),
+                    },
+                    {
+                      selectedValue: 'etc',
+                      displayValue: '기타',
+                      onClick: () => updateLogData('equipmentType', 'etc'),
+                    },
+                  ]}
+                />
+
+                <LogDataSelector
+                  title="수면해류"
+                  value={logData.surfaceCurrentType || ''}
+                  selectedData={[
+                    {
+                      selectedValue: 'strong',
+                      displayValue: '강한해류',
+                      onClick: () => updateLogData('surfaceCurrentType', 'strong'),
+                    },
+                    {
+                      selectedValue: 'weak',
+                      displayValue: '약한해류',
+                      onClick: () => updateLogData('surfaceCurrentType', 'weak'),
+                    },
+                    {
+                      selectedValue: 'none',
+                      displayValue: '조류없음',
+                      onClick: () => updateLogData('surfaceCurrentType', 'none'),
+                    },
+                  ]}
+                />
+
+                <LogDataSelector
+                  title="심층해류"
+                  value={logData.deepCurrentType || ''}
+                  selectedData={[
+                    {
+                      selectedValue: 'strong',
+                      displayValue: '강한해류',
+                      onClick: () => updateLogData('deepCurrentType', 'strong'),
+                    },
+                    {
+                      selectedValue: 'weak',
+                      displayValue: '약한해류',
+                      onClick: () => updateLogData('deepCurrentType', 'weak'),
+                    },
+                    {
+                      selectedValue: 'none',
+                      displayValue: '조류없음',
+                      onClick: () => updateLogData('deepCurrentType', 'none'),
+                    },
+                  ]}
+                />
+              </StepContainer>
+            )}
+
+            <StepContainer
+              step={logData.divingType === 'snorkeling' ? 8 : 9}
+              title="로그데이터 기록"
+            >
+              {(logData.divingType === 'free' || logData.divingType === 'scuba') && (
+                <div className="flex gap-[17px]">
+                  <SubTitleContainer title="수온">
+                    <InputWithUnit
+                      _size="small"
+                      type="number"
+                      unit={'℃'}
+                      value={logData.waterTemp}
+                      onChange={(e) => updateLogData('waterTemp', Number(e.target.value))}
+                    />
+                  </SubTitleContainer>
+                  <SubTitleContainer title="기온">
+                    <InputWithUnit
+                      _size="small"
+                      type="number"
+                      unit={'℃'}
+                      value={logData.temp}
+                      onChange={(e) => updateLogData('temp', Number(e.target.value))}
+                    />
+                  </SubTitleContainer>
                 </div>
-              </SubTitleContainer>
+              )}
 
-              <SubTitleContainer title="수면해류">
-                <div className="flex gap-3">
-                  <Button size="small" color="secondary">
-                    <span className=" font-medium text-white">강한해류</span>
-                  </Button>
-                  <Button size="small" color="normal">
-                    <span className=" font-medium text-black">약한해류</span>
-                  </Button>
-                  <Button size="small" color="normal">
-                    <span className=" font-medium text-black">조류없음</span>
-                  </Button>
-                </div>
-              </SubTitleContainer>
+              {logData.divingType === 'scuba' && (
+                <>
+                  <div className="flex gap-[17px]">
+                    <SubTitleContainer title="입수전 잔량">
+                      <InputWithUnit
+                        _size="small"
+                        unit={'bar'}
+                        type="number"
+                        value={logData.beforeBar}
+                        onChange={(e) => updateLogData('beforeBar', Number(e.target.value))}
+                      />
+                    </SubTitleContainer>
+                    <SubTitleContainer title="입수후 잔량">
+                      <InputWithUnit
+                        _size="small"
+                        unit={'bar'}
+                        type="number"
+                        value={logData.afterBar}
+                        onChange={(e) => updateLogData('afterBar', Number(e.target.value))}
+                      />
+                    </SubTitleContainer>
+                  </div>
 
-              <SubTitleContainer title="심층해류">
-                <div className="flex gap-3">
-                  <Button size="small" color="secondary">
-                    <span className=" font-medium text-white">강한해류</span>
-                  </Button>
-                  <Button size="small" color="normal">
-                    <span className=" font-medium text-black">약한해류</span>
-                  </Button>
-                  <Button size="small" color="normal">
-                    <span className=" font-medium text-black">조류없음</span>
-                  </Button>
-                </div>
-              </SubTitleContainer>
-            </StepContainer>
+                  <div className="flex gap-[17px]">
+                    <SubTitleContainer title="다이브 최고수심">
+                      <InputWithUnit
+                        _size="small"
+                        unit={'m'}
+                        type="number"
+                        value={logData.diveDeepest}
+                        onChange={(e) => updateLogData('diveDeepest', Number(e.target.value))}
+                      />
+                    </SubTitleContainer>
+                    <SubTitleContainer title="포인트 수심">
+                      <InputWithUnit
+                        _size="small"
+                        unit={'m'}
+                        type="number"
+                        value={logData.pointDepth}
+                        onChange={(e) => updateLogData('pointDepth', Number(e.target.value))}
+                      />
+                    </SubTitleContainer>
+                  </div>
 
-            <StepContainer step={9} title="로그데이터 기록">
-              <div className="flex gap-[17px]">
-                <SubTitleContainer title="수온">
-                  <InputWithUnit _size="small" unit={'℃'} />
-                </SubTitleContainer>
-                <SubTitleContainer title="기온">
-                  <InputWithUnit _size="small" unit={'℃'} />
-                </SubTitleContainer>
-              </div>
-
-              <div className="flex gap-[17px]">
-                <SubTitleContainer title="입수전 잔량">
-                  <InputWithUnit _size="small" unit={'bar'} />
-                </SubTitleContainer>
-                <SubTitleContainer title="입수후 잔량">
-                  <InputWithUnit _size="small" unit={'bar'} />
-                </SubTitleContainer>
-              </div>
-
-              <div className="flex gap-[17px]">
-                <SubTitleContainer title="다이브 최고수심">
-                  <InputWithUnit _size="small" unit={'m'} />
-                </SubTitleContainer>
-                <SubTitleContainer title="포인트 수심">
-                  <InputWithUnit _size="small" unit={'m'} />
-                </SubTitleContainer>
-              </div>
-
-              <div className="flex gap-[17px]">
-                <SubTitleContainer title="다이브 시간">
-                  <InputWithUnit _size="small" unit={'분'} />
-                </SubTitleContainer>
-                <SubTitleContainer title="감압시간">
-                  <InputWithUnit _size="small" unit={'분'} />
-                </SubTitleContainer>
-              </div>
+                  <div className="flex gap-[17px]">
+                    <SubTitleContainer title="다이브 시간">
+                      <InputWithUnit
+                        _size="small"
+                        unit={'분'}
+                        type="number"
+                        value={logData.diveTime}
+                        onChange={(e) => updateLogData('diveTime', Number(e.target.value))}
+                      />
+                    </SubTitleContainer>
+                    <SubTitleContainer title="감압시간">
+                      <InputWithUnit
+                        _size="small"
+                        unit={'분'}
+                        type="number"
+                        value={logData.decompressionTime}
+                        onChange={(e) => updateLogData('decompressionTime', Number(e.target.value))}
+                      />
+                    </SubTitleContainer>
+                  </div>
+                </>
+              )}
 
               <div className="flex gap-[17px]">
                 <div className="w-full">
                   <SubTitleContainer title="시야">
-                    <InputWithUnit _size="small" unit={'m'} />
+                    <InputWithUnit
+                      _size="small"
+                      unit={'m'}
+                      type="number"
+                      value={logData.visualField}
+                      onChange={(e) => updateLogData('visualField', Number(e.target.value))}
+                    />
                   </SubTitleContainer>
                 </div>
                 <div className="w-full" />

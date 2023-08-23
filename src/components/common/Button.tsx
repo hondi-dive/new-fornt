@@ -9,9 +9,9 @@ const Button = forwardRef((props: Props, forwardRef: Ref<HTMLButtonElement>) => 
   const { size = 'medium', color = 'primary', children, ...rest } = props;
 
   const BUTTON_COLOR = {
-    primary: 'bg-[#567BFF]',
-    secondary: 'bg-[#92aafd]',
-    selected: 'bg-[#E9EAF4]',
+    primary: 'bg-[#567BFF] border-solid border-[1px] border-[#567BFF]',
+    secondary: 'bg-[#92aafd] border-solid border-[1px] border-[#92aafd]',
+    selected: 'bg-[#E9EAF4] border-solid border-[1px] border-[#E9EAF4]',
     normal: 'bg-white border-solid border-[1px] border-[#92aafd]',
   };
 

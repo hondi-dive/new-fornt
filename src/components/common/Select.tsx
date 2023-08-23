@@ -1,32 +1,27 @@
 import ArrowDown from '@/assets/icons/arrowDown.svg';
 import { Listbox, Transition } from '@headlessui/react';
-import { Fragment, useState } from 'react';
+import { Fragment } from 'react';
 
-type SelectedValue = string;
-type DisplayValue = string;
+type SelectData = {
+  id: number | string;
+  selectedValue: string;
+  displayValue: string;
+};
 
 interface Props {
-  data: [SelectedValue, DisplayValue][];
-  onChange: (value: string) => void;
+  data: SelectData[];
+  value: SelectData;
+  onChange: (value: SelectData) => void;
   disabled?: boolean;
 }
 
-export default function Select({ data, onChange, disabled }: Props) {
-  const [selected, setSelected] = useState<[SelectedValue, DisplayValue]>(data[0]);
-
-  const handleChange = (value: [SelectedValue, DisplayValue]) => {
-    setSelected(value);
-    onChange(value[0]);
-  };
-
-  const [_, displayValue] = selected;
-
+export default function Select({ data, value, onChange, disabled }: Props) {
   return (
-    <Listbox value={selected} onChange={handleChange}>
+    <Listbox value={value} onChange={onChange}>
       <div className="relative mt-1">
         <Listbox.Button className="relative h-[50px] flex items-center w-full border-[1px] border-[#d9d9d9] border-solid rounded-lg justify-center">
           <span className={`block truncate ${disabled ? 'text-[#7f7f7f]' : 'text-black'}`}>
-            {displayValue}
+            {value.displayValue}
           </span>
           <span className="absolute right-7">
             <ArrowDown />
@@ -52,7 +47,7 @@ export default function Select({ data, onChange, disabled }: Props) {
                 {({ selected }) => (
                   <>
                     <span className={`block truncate ${selected ? 'font-medium' : 'font-normal'}`}>
-                      {datum[1]}
+                      {datum.displayValue}
                     </span>
                     {selected ? (
                       <span className="absolute inset-y-0 left-0 flex items-center pl-3 text-amber-600">
