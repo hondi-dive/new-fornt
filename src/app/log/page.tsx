@@ -7,14 +7,136 @@ import Select from '@/components/common/Select';
 import HeaderLayout from '@/layouts/HeaderLayout';
 import ProgressTitle from '@/components/page/log/ProgressTitle';
 import Input from '@/components/common/Input';
-import { useState } from 'react';
+import { useCallback, useEffect, useRef, useState } from 'react';
 import SubTitleContainer from '@/components/common/SubTitleContainer';
 import InputWithUnit from '@/components/common/InputWithUnit';
 import Link from 'next/link';
 import CaretLeftIcon from '@/assets/icons/CaretLeft.svg';
+import Spot from '@/assets/icons/spot.svg';
+import Script from 'next/script';
+import { KakaoLatLng, KakaoMap } from '@/types/kakao';
+import PlacePicker from '@/components/page/log/PlacePicker';
+import { LogData } from '@/types/log';
+import ArrowDown from '@/assets/icons/arrowDown.svg';
+import { convertDashToKorean } from '@/utils/format';
+import LogDataSelector from '@/components/page/log/LogDataSelector';
+
+const NEXT_PUBLIC_KAKAO_KEY = process.env.NEXT_PUBLIC_KAKAO_APP_KEY;
 
 export default function Log() {
+  const mapRef = useRef<HTMLDivElement>(null);
+  const dateRef = useRef<HTMLInputElement>(null);
   const [pageType, setPageType] = useState<'log' | 'logDetail'>('log');
+  const [placeModal, setPlaceModal] = useState(false);
+  const [latLng, setLatLng] = useState({ lat: 33.378306, lng: 126.5424 });
+  const [address, setAddress] = useState('제주특별자치도 제주시 아라동');
+  const [logData, setLogData] = useState<LogData>({
+    place: '',
+    date: new Date().toISOString().substring(0, 10),
+    divingType: 'scuba',
+    satisfaction: 0,
+    hashTag: [],
+    comment: '',
+    equipmentType: 'coast',
+    surfaceCurrentType: 'strong',
+    deepCurrentType: 'strong',
+    waterTemp: undefined,
+    temp: undefined,
+    beforeBar: undefined,
+    afterBar: undefined,
+    diveDeepest: undefined,
+    pointDepth: undefined,
+    diveTime: undefined,
+    decompressionTime: undefined,
+    visualField: undefined,
+  });
+
+  const TYPE_SELECT_DATA = [
+    { id: 1, displayValue: '스쿠버 다이빙', selectedValue: 'scuba' },
+    { id: 2, displayValue: '프리 다이빙', selectedValue: 'free' },
+    { id: 3, displayValue: '스노클링', selectedValue: 'snorkeling' },
+  ];
+
+  const displayCenterInfo = (result: any, status: any) => {
+    if (status === window.kakao.maps.services.Status.OK) {
+      for (var i = 0; i < result.length; i++) {
+        if (result[i].region_type === 'H') {
+          setAddress(result[i].address_name);
+          break;
+        }
+      }
+    }
+  };
+
+  const searchAddrFromCoords = (
+    coords: KakaoLatLng,
+    callback: (result: any, status: any) => void,
+  ) => {
+    const geocoder = new window.kakao.maps.services.Geocoder();
+    geocoder.coord2RegionCode(coords.getLng(), coords.getLat(), callback);
+  };
+
+  const initMap = useCallback(() => {
+    let centerChange: KakaoMap;
+    if (mapRef.current && window?.kakao) {
+      const mapOption = {
+        center: new window.kakao.maps.LatLng(33.376692, 126.54222),
+        level: 11,
+      };
+
+      const map = new window.kakao.maps.Map(mapRef.current, mapOption);
+
+      centerChange = window.kakao.maps.event.addListener(map, 'center_changed', () => {
+        const coords = map.getCenter();
+        setLatLng({ lat: coords.getLat(), lng: coords.getLng() });
+        searchAddrFromCoords(coords, displayCenterInfo);
+      });
+    }
+
+    return () => window.kakao.maps.event.removeListener(centerChange);
+  }, [mapRef]);
+
+  useEffect(() => {
+    if (placeModal) {
+      initMap();
+    }
+  }, [placeModal, initMap]);
+
+  const updateLogData = (key: keyof LogData, value: string | number | string[]) => {
+    setLogData((prev) => ({ ...prev, [key]: value }));
+  };
+
+  const handleClickPlaceAdd = () => {
+    updateLogData('place', address);
+    setPlaceModal(false);
+  };
+
+  const handleClickDivingType = (value: {
+    id: number | string;
+    selectedValue: string;
+    displayValue: string;
+  }) => {
+    updateLogData('divingType', value.selectedValue);
+    initLogData();
+  };
+
+  const initLogData = () => {
+    setLogData((prev) => ({
+      ...prev,
+      equipmentType: 'coast',
+      surfaceCurrentType: 'strong',
+      deepCurrentType: 'strong',
+      waterTemp: undefined,
+      temp: undefined,
+      beforeBar: undefined,
+      afterBar: undefined,
+      diveDeepest: undefined,
+      pointDepth: undefined,
+      diveTime: undefined,
+      decompressionTime: undefined,
+      visualField: undefined,
+    }));
+  };
 
   return (
     <HeaderLayout
@@ -22,6 +144,7 @@ export default function Log() {
       nextComponent={
         pageType === 'log' ? (
           <button
+            disabled={!logData.place}
             onClick={() => setPageType('logDetail')}
             className="text-[#426BFF] text-lg font-semibold disabled:text-[#d9d9d9]"
           >
@@ -44,6 +167,29 @@ export default function Log() {
         ) : undefined
       }
     >
+      {placeModal && (
+        <PlacePicker showModal={placeModal} setShowModal={setPlaceModal}>
+          <div className="relative flex justify-center items-center">
+            <div className="absolute z-40 mb-10">
+              <Spot />
+            </div>
+            <div className="w-1 h-1 bg-red-600 absolute z-50" />
+
+            <Script
+              src={`https://dapi.kakao.com/v2/maps/sdk.js?appkey=${NEXT_PUBLIC_KAKAO_KEY}&autoload=false&libraries=services`}
+              onLoad={() => window.kakao.maps.load(initMap)}
+            />
+            <div
+              ref={mapRef}
+              className="w-full h-[350px] mb-5 relative justify-center items-center"
+            />
+          </div>
+          <div>{address}</div>
+          <Button size="small" onClick={handleClickPlaceAdd}>
+            <div className="text-white">확인</div>
+          </Button>
+        </PlacePicker>
+      )}
       <div className="p-6 flex flex-col gap-[42px]">
         <ProgressTitle
           currProgress={pageType === 'log' ? 1 : 2}
@@ -54,28 +200,49 @@ export default function Log() {
         {pageType === 'log' ? (
           <>
             <StepContainer step={1} title="바다장소 등록">
-              <Button onClick={() => console.log('test')}>
-                <span className=" text-lg text-white">장소등록</span>
-              </Button>
+              {logData.place ? (
+                <Button color="selected" onClick={() => setPlaceModal(true)}>
+                  <span className=" text-lg text-[#426BFF]">{logData.place}</span>
+                </Button>
+              ) : (
+                <Button onClick={() => setPlaceModal(true)}>
+                  <span className=" text-lg text-white">장소등록</span>
+                </Button>
+              )}
             </StepContainer>
 
             <StepContainer step={2} title="등록날짜 입력">
-              <Select>
-                <option>2023년 8월 5일</option>
-                <option>test2</option>
-              </Select>
+              <button
+                className={`relative h-[50px] flex items-center w-full border-[1px] border-[#d9d9d9] border-solid rounded-lg justify-center`}
+                onClick={() => dateRef?.current && dateRef.current.showPicker()}
+              >
+                <span className={`text-[17px] ${!logData.place ? 'text-[#7f7f7f]' : 'text-black'}`}>
+                  {convertDashToKorean(logData.date)}
+                </span>
+                <div className="absolute right-7">
+                  <ArrowDown />
+                </div>
+                <input
+                  ref={dateRef}
+                  type="date"
+                  className="absolute bottom-0 left-0 opacity-0"
+                  onChange={(e) => updateLogData('date', e.target.value)}
+                />
+              </button>
             </StepContainer>
 
             <StepContainer step={3} title="활동유형 선택">
-              <Select>
-                <option>스쿠버 다이빙</option>
-                <option>test2</option>
-              </Select>
+              <Select
+                disabled={!logData.place}
+                data={TYPE_SELECT_DATA}
+                value={TYPE_SELECT_DATA.filter((d) => d.selectedValue === logData.divingType)[0]}
+                onChange={handleClickDivingType}
+              />
             </StepContainer>
 
             <StepContainer step={4} title="만족도 선택">
               <div className="h-[50px] w-full border-[1px] border-[#d9d9d9] border-solid rounded-lg flex items-center justify-center">
-                <Satisfaction />
+                <Satisfaction onChange={(value) => updateLogData('satisfaction', value)} />
               </div>
             </StepContainer>
 
@@ -84,100 +251,197 @@ export default function Log() {
             </StepContainer>
 
             <StepContainer step={6} title="해시태그 등록">
-              <Input placeholder="# 해시태그" style={{ border: '1px solid #a5a5a5' }} />
+              <Input
+                placeholder="# 해시태그"
+                style={{ border: '1px solid #a5a5a5' }}
+                onChange={(e) => updateLogData('hashTag', e.target.value)}
+              />
             </StepContainer>
 
             <StepContainer step={7} title="한줄후기 입력">
-              <Input placeholder="한줄후기 입력" style={{ border: '1px solid #a5a5a5' }} />
+              <Input
+                placeholder="한줄후기 입력"
+                style={{ border: '1px solid #a5a5a5' }}
+                onChange={(e) => updateLogData('comment', e.target.value)}
+              />
             </StepContainer>
           </>
         ) : (
           <>
-            <StepContainer step={8} title="로그데이터 선택">
-              <SubTitleContainer title="입수형태">
-                <div className="flex gap-3">
-                  <Button size="small" color="secondary">
-                    <span className=" font-medium text-white">해안</span>
-                  </Button>
-                  <Button size="small" color="normal">
-                    <span className=" font-medium text-black">보트</span>
-                  </Button>
-                  <Button size="small" color="normal">
-                    <span className=" font-medium text-black">기타</span>
-                  </Button>
+            {(logData.divingType === 'free' || logData.divingType === 'scuba') && (
+              <StepContainer step={8} title="로그데이터 선택">
+                <LogDataSelector
+                  title="입수 형태"
+                  value={logData.equipmentType || ''}
+                  selectedData={[
+                    {
+                      selectedValue: 'coast',
+                      displayValue: '해안',
+                      onClick: () => updateLogData('equipmentType', 'coast'),
+                    },
+                    {
+                      selectedValue: 'boat',
+                      displayValue: '보트',
+                      onClick: () => updateLogData('equipmentType', 'boat'),
+                    },
+                    {
+                      selectedValue: 'etc',
+                      displayValue: '기타',
+                      onClick: () => updateLogData('equipmentType', 'etc'),
+                    },
+                  ]}
+                />
+
+                <LogDataSelector
+                  title="수면해류"
+                  value={logData.surfaceCurrentType || ''}
+                  selectedData={[
+                    {
+                      selectedValue: 'strong',
+                      displayValue: '강한해류',
+                      onClick: () => updateLogData('surfaceCurrentType', 'strong'),
+                    },
+                    {
+                      selectedValue: 'weak',
+                      displayValue: '약한해류',
+                      onClick: () => updateLogData('surfaceCurrentType', 'weak'),
+                    },
+                    {
+                      selectedValue: 'none',
+                      displayValue: '조류없음',
+                      onClick: () => updateLogData('surfaceCurrentType', 'none'),
+                    },
+                  ]}
+                />
+
+                <LogDataSelector
+                  title="심층해류"
+                  value={logData.deepCurrentType || ''}
+                  selectedData={[
+                    {
+                      selectedValue: 'strong',
+                      displayValue: '강한해류',
+                      onClick: () => updateLogData('deepCurrentType', 'strong'),
+                    },
+                    {
+                      selectedValue: 'weak',
+                      displayValue: '약한해류',
+                      onClick: () => updateLogData('deepCurrentType', 'weak'),
+                    },
+                    {
+                      selectedValue: 'none',
+                      displayValue: '조류없음',
+                      onClick: () => updateLogData('deepCurrentType', 'none'),
+                    },
+                  ]}
+                />
+              </StepContainer>
+            )}
+
+            <StepContainer
+              step={logData.divingType === 'snorkeling' ? 8 : 9}
+              title="로그데이터 기록"
+            >
+              {(logData.divingType === 'free' || logData.divingType === 'scuba') && (
+                <div className="flex gap-[17px]">
+                  <SubTitleContainer title="수온">
+                    <InputWithUnit
+                      _size="small"
+                      type="number"
+                      unit={'℃'}
+                      value={logData.waterTemp}
+                      onChange={(e) => updateLogData('waterTemp', Number(e.target.value))}
+                    />
+                  </SubTitleContainer>
+                  <SubTitleContainer title="기온">
+                    <InputWithUnit
+                      _size="small"
+                      type="number"
+                      unit={'℃'}
+                      value={logData.temp}
+                      onChange={(e) => updateLogData('temp', Number(e.target.value))}
+                    />
+                  </SubTitleContainer>
                 </div>
-              </SubTitleContainer>
+              )}
 
-              <SubTitleContainer title="수면해류">
-                <div className="flex gap-3">
-                  <Button size="small" color="secondary">
-                    <span className=" font-medium text-white">강한해류</span>
-                  </Button>
-                  <Button size="small" color="normal">
-                    <span className=" font-medium text-black">약한해류</span>
-                  </Button>
-                  <Button size="small" color="normal">
-                    <span className=" font-medium text-black">조류없음</span>
-                  </Button>
-                </div>
-              </SubTitleContainer>
+              {logData.divingType === 'scuba' && (
+                <>
+                  <div className="flex gap-[17px]">
+                    <SubTitleContainer title="입수전 잔량">
+                      <InputWithUnit
+                        _size="small"
+                        unit={'bar'}
+                        type="number"
+                        value={logData.beforeBar}
+                        onChange={(e) => updateLogData('beforeBar', Number(e.target.value))}
+                      />
+                    </SubTitleContainer>
+                    <SubTitleContainer title="입수후 잔량">
+                      <InputWithUnit
+                        _size="small"
+                        unit={'bar'}
+                        type="number"
+                        value={logData.afterBar}
+                        onChange={(e) => updateLogData('afterBar', Number(e.target.value))}
+                      />
+                    </SubTitleContainer>
+                  </div>
 
-              <SubTitleContainer title="심층해류">
-                <div className="flex gap-3">
-                  <Button size="small" color="secondary">
-                    <span className=" font-medium text-white">강한해류</span>
-                  </Button>
-                  <Button size="small" color="normal">
-                    <span className=" font-medium text-black">약한해류</span>
-                  </Button>
-                  <Button size="small" color="normal">
-                    <span className=" font-medium text-black">조류없음</span>
-                  </Button>
-                </div>
-              </SubTitleContainer>
-            </StepContainer>
+                  <div className="flex gap-[17px]">
+                    <SubTitleContainer title="다이브 최고수심">
+                      <InputWithUnit
+                        _size="small"
+                        unit={'m'}
+                        type="number"
+                        value={logData.diveDeepest}
+                        onChange={(e) => updateLogData('diveDeepest', Number(e.target.value))}
+                      />
+                    </SubTitleContainer>
+                    <SubTitleContainer title="포인트 수심">
+                      <InputWithUnit
+                        _size="small"
+                        unit={'m'}
+                        type="number"
+                        value={logData.pointDepth}
+                        onChange={(e) => updateLogData('pointDepth', Number(e.target.value))}
+                      />
+                    </SubTitleContainer>
+                  </div>
 
-            <StepContainer step={9} title="로그데이터 기록">
-              <div className="flex gap-[17px]">
-                <SubTitleContainer title="수온">
-                  <InputWithUnit _size="small" unit={'℃'} />
-                </SubTitleContainer>
-                <SubTitleContainer title="기온">
-                  <InputWithUnit _size="small" unit={'℃'} />
-                </SubTitleContainer>
-              </div>
-
-              <div className="flex gap-[17px]">
-                <SubTitleContainer title="입수전 잔량">
-                  <InputWithUnit _size="small" unit={'bar'} />
-                </SubTitleContainer>
-                <SubTitleContainer title="입수후 잔량">
-                  <InputWithUnit _size="small" unit={'bar'} />
-                </SubTitleContainer>
-              </div>
-
-              <div className="flex gap-[17px]">
-                <SubTitleContainer title="다이브 최고수심">
-                  <InputWithUnit _size="small" unit={'m'} />
-                </SubTitleContainer>
-                <SubTitleContainer title="포인트 수심">
-                  <InputWithUnit _size="small" unit={'m'} />
-                </SubTitleContainer>
-              </div>
-
-              <div className="flex gap-[17px]">
-                <SubTitleContainer title="다이브 시간">
-                  <InputWithUnit _size="small" unit={'분'} />
-                </SubTitleContainer>
-                <SubTitleContainer title="감압시간">
-                  <InputWithUnit _size="small" unit={'분'} />
-                </SubTitleContainer>
-              </div>
+                  <div className="flex gap-[17px]">
+                    <SubTitleContainer title="다이브 시간">
+                      <InputWithUnit
+                        _size="small"
+                        unit={'분'}
+                        type="number"
+                        value={logData.diveTime}
+                        onChange={(e) => updateLogData('diveTime', Number(e.target.value))}
+                      />
+                    </SubTitleContainer>
+                    <SubTitleContainer title="감압시간">
+                      <InputWithUnit
+                        _size="small"
+                        unit={'분'}
+                        type="number"
+                        value={logData.decompressionTime}
+                        onChange={(e) => updateLogData('decompressionTime', Number(e.target.value))}
+                      />
+                    </SubTitleContainer>
+                  </div>
+                </>
+              )}
 
               <div className="flex gap-[17px]">
                 <div className="w-full">
                   <SubTitleContainer title="시야">
-                    <InputWithUnit _size="small" unit={'m'} />
+                    <InputWithUnit
+                      _size="small"
+                      unit={'m'}
+                      type="number"
+                      value={logData.visualField}
+                      onChange={(e) => updateLogData('visualField', Number(e.target.value))}
+                    />
                   </SubTitleContainer>
                 </div>
                 <div className="w-full" />

@@ -6,19 +6,21 @@ import Link from 'next/link';
 
 import CheckCircle from '@/assets/icons/CheckCircle.svg';
 
+const TABLIST = ['스노쿨링', '프리다이빙', '스쿠버다이빙'];
+
 export default function Feed() {
   return (
     <>
       <div className="w-full h-8" />
       <Tab.Group>
         <Tab.List className="bg-[#E9EAF4] flex justify-between rounded-3xl py-2 px-2">
-          {['스노쿨링', '프리다이빙', '스쿠버다이빙'].map((tab) => (
+          {TABLIST.map((tab) => (
             <Tab as={Fragment} key={tab}>
               {({ selected }) => (
                 <button
                   className={`${
                     selected
-                      ? 'bg-[#567BFF] text-white'
+                      ? 'bg-[#567BFF] text-white border-2 border-solid border-[#567BFF]'
                       : 'border-[#92AAFD] border-2 border-solid bg-white text-[#7F7F7F]'
                   } text-base outline-none flex items-center rounded-3xl py-1.5 px-2`}
                 >
@@ -30,7 +32,7 @@ export default function Feed() {
           ))}
         </Tab.List>
         <Tab.Panels className="mt-8">
-          <Tab.Panel>
+          <Tab.Panel className="pb-24">
             <div className="grid gap-3 grid-cols-2 ">
               {['1', '2', '3', '4', '5', '6', '8'].map((item) => (
                 <Link key={item} href={`/feed/detail/${item}`}>
@@ -40,20 +42,20 @@ export default function Feed() {
               <div></div>
             </div>
           </Tab.Panel>
-          <Tab.Panel>
+          <Tab.Panel className="pb-24">
             <div className="grid gap-3 grid-cols-2 ">
-              {['1', '2', '3', '4', '5', '6', '8'].map((item) => (
-                <div key={item} className="  bg-red-400 w-full  h-[168px] rounded-lg">
+              {['1', '2', '3'].map((item) => (
+                <div key={item} className="  bg-blue-400 w-full  h-[168px] rounded-lg">
                   {item}
                 </div>
               ))}
               <div></div>
             </div>
           </Tab.Panel>
-          <Tab.Panel>
+          <Tab.Panel className="pb-24">
             <div className="grid gap-3 grid-cols-2 ">
-              {['1', '2', '3', '4', '5', '6', '8'].map((item) => (
-                <div key={item} className="  bg-red-400 w-full  h-[168px] rounded-lg">
+              {['1', '2', '3', '4', '5'].map((item) => (
+                <div key={item} className="  bg-green-400 w-full  h-[168px] rounded-lg">
                   {item}
                 </div>
               ))}

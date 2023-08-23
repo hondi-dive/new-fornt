@@ -1,0 +1,20 @@
+export type LogData = {
+  place: string;
+  date: string;
+  divingType: 'scuba' | 'free' | 'snorkeling';
+  satisfaction: 0 | 1 | 2 | 3 | 4 | 5;
+  hashTag: string[];
+  comment: string;
+  equipmentType?: 'coast' | 'boat' | 'etc';
+  surfaceCurrentType?: 'strong' | 'weak' | 'none';
+  deepCurrentType?: 'strong' | 'weak' | 'none';
+  waterTemp?: number;
+  temp?: number;
+  beforeBar?: number;
+  afterBar?: number;
+  diveDeepest?: number;
+  pointDepth?: number;
+  diveTime?: number;
+  decompressionTime?: number;
+  visualField?: number;
+};
