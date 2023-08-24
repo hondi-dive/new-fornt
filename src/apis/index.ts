@@ -2,7 +2,7 @@ import Axios, { AxiosInstance } from 'axios';
 
 export const createApi = (): AxiosInstance => {
   const customAxios = Axios.create({
-    baseURL: 'http://api.hondidive.site',
+    baseURL: 'https://api.hondidive.site',
     withCredentials: true,
   });
 
