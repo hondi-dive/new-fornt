@@ -1,7 +1,7 @@
 'use client';
 
 import { useRouter } from 'next/navigation';
-
+import { getCookie } from 'cookies-next';
 import useTimeout from '@/hooks/useTimeout';
 import LogoIcon from '@/assets/icons/logo.svg';
 import LeftHandIcon from '@/assets/icons/leftHand.svg';
@@ -12,7 +12,8 @@ export default function Page() {
   const router = useRouter();
 
   useTimeout(() => {
-    router.push('/home');
+    if (getCookie('token')) return router.push('/home');
+    router.push('/login');
   }, 3000);
 
   return (
