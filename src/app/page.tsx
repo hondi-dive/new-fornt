@@ -12,7 +12,7 @@ export default function Page() {
   const router = useRouter();
 
   useTimeout(() => {
-    if (getCookie('token')) return router.push('/home');
+    if (getCookie('access_token')) return router.push('/home');
     router.push('/login');
   }, 3000);
 
