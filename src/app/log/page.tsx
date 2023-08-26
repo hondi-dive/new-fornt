@@ -10,7 +10,6 @@ import Input from '@/components/common/Input';
 import { useCallback, useEffect, useRef, useState } from 'react';
 import SubTitleContainer from '@/components/common/SubTitleContainer';
 import InputWithUnit from '@/components/common/InputWithUnit';
-import Link from 'next/link';
 import CaretLeftIcon from '@/assets/icons/CaretLeft.svg';
 import Spot from '@/assets/icons/spot.svg';
 import Script from 'next/script';
@@ -20,41 +19,143 @@ import { LogData } from '@/types/log';
 import ArrowDown from '@/assets/icons/arrowDown.svg';
 import { convertDashToKorean } from '@/utils/format';
 import LogDataSelector from '@/components/page/log/LogDataSelector';
+import { useRouter } from 'next/navigation';
+import { fetchCreateDiveLogs } from '@/apis/log';
 
 const NEXT_PUBLIC_KAKAO_KEY = process.env.NEXT_PUBLIC_KAKAO_APP_KEY;
 
 export default function Log() {
+  const router = useRouter();
   const mapRef = useRef<HTMLDivElement>(null);
   const dateRef = useRef<HTMLInputElement>(null);
   const [pageType, setPageType] = useState<'log' | 'logDetail'>('log');
   const [placeModal, setPlaceModal] = useState(false);
-  const [latLng, setLatLng] = useState({ lat: 33.378306, lng: 126.5424 });
+  const [imageForm, setImageForm] = useState<FormData>();
   const [address, setAddress] = useState('제주특별자치도 제주시 아라동');
   const [logData, setLogData] = useState<LogData>({
-    place: '',
-    date: new Date().toISOString().substring(0, 10),
-    divingType: 'scuba',
-    satisfaction: 0,
-    hashTag: [],
-    comment: '',
-    equipmentType: 'coast',
-    surfaceCurrentType: 'strong',
-    deepCurrentType: 'strong',
+    address: '',
+    latitude: 33.378306, // 한라산 국립공원 위도
+    longitude: 126.5424, // 한라산 국립공원 경도
+    diveAt: new Date().toISOString().substring(0, 10),
+    diveType: 'SCUBA',
+    score: 0,
+    review: '',
+    isPublic: true,
+    approachType: undefined,
+    surfaceFlow: undefined,
+    deepFlow: undefined,
     waterTemp: undefined,
     temp: undefined,
-    beforeBar: undefined,
-    afterBar: undefined,
-    diveDeepest: undefined,
+    beforeTank: undefined,
+    afterTank: undefined,
+    diveDepth: undefined,
     pointDepth: undefined,
     diveTime: undefined,
     decompressionTime: undefined,
-    visualField: undefined,
+    distanceView: undefined,
+    hashTag: undefined,
   });
 
-  const TYPE_SELECT_DATA = [
-    { id: 1, displayValue: '스쿠버 다이빙', selectedValue: 'scuba' },
-    { id: 2, displayValue: '프리 다이빙', selectedValue: 'free' },
-    { id: 3, displayValue: '스노클링', selectedValue: 'snorkeling' },
+  const fetchDiveLogs = async () => {
+    try {
+      const formData = createFormData();
+      if (!formData) return;
+      await fetchCreateDiveLogs(formData);
+
+      router.replace('/feed/1');
+    } catch (error) {
+      console.log(error);
+      alert('서버 에러 입니다.');
+    }
+  };
+
+  const createFormData = () => {
+    const {
+      address,
+      latitude,
+      longitude,
+      diveAt,
+      diveType,
+      score,
+      review,
+      isPublic,
+      approachType,
+      surfaceFlow,
+      deepFlow,
+      waterTemp,
+      temp,
+      distanceView,
+      hashTag,
+    } = logData;
+
+    switch (logData.diveType) {
+      case 'SCUBA':
+        imageForm?.append(
+          'contens',
+          new Blob([JSON.stringify(logData)], { type: 'application/json' }),
+        );
+        break;
+      case 'FREEDIVING':
+        imageForm?.append(
+          'contens',
+          new Blob(
+            [
+              JSON.stringify({
+                address,
+                latitude,
+                longitude,
+                diveAt,
+                diveType,
+                score,
+                review,
+                isPublic,
+                approachType,
+                surfaceFlow,
+                deepFlow,
+                waterTemp,
+                temp,
+                distanceView,
+                hashTag,
+              }),
+            ],
+            { type: 'application/json' },
+          ),
+        );
+        break;
+      case 'SNORKEL':
+        imageForm?.append(
+          'contens',
+          new Blob(
+            [
+              JSON.stringify({
+                address,
+                latitude,
+                longitude,
+                diveAt,
+                diveType,
+                score,
+                review,
+                isPublic,
+                distanceView,
+                hashTag,
+              }),
+            ],
+            { type: 'application/json' },
+          ),
+        );
+        break;
+
+      default:
+        throw 'data error';
+    }
+
+    return imageForm;
+  };
+
+  const DIVE_TYPE_SELECT_DATA = [
+    { id: 1, displayValue: '스쿠버 다이빙', selectedValue: 'SCUBA' },
+    { id: 2, displayValue: '프리 다이빙', selectedValue: 'FREEDIVING' },
+    { id: 3, displayValue: '스노클링', selectedValue: 'SNORKEL' },
   ];
 
   const displayCenterInfo = (result: any, status: any) => {
@@ -88,7 +189,8 @@ export default function Log() {
 
       centerChange = window.kakao.maps.event.addListener(map, 'center_changed', () => {
         const coords = map.getCenter();
-        setLatLng({ lat: coords.getLat(), lng: coords.getLng() });
+        updateLogData('latitude', coords.getLat());
+        updateLogData('longitude', coords.getLng());
         searchAddrFromCoords(coords, displayCenterInfo);
       });
     }
@@ -107,34 +209,34 @@ export default function Log() {
   };
 
   const handleClickPlaceAdd = () => {
-    updateLogData('place', address);
+    updateLogData('address', address);
     setPlaceModal(false);
   };
 
-  const handleClickDivingType = (value: {
+  const handleClickDiveType = (value: {
     id: number | string;
     selectedValue: string;
     displayValue: string;
   }) => {
-    updateLogData('divingType', value.selectedValue);
+    updateLogData('diveType', value.selectedValue);
     initLogData();
   };
 
   const initLogData = () => {
     setLogData((prev) => ({
       ...prev,
-      equipmentType: 'coast',
-      surfaceCurrentType: 'strong',
-      deepCurrentType: 'strong',
+      approachType: undefined,
+      surfaceFlow: undefined,
+      deepFlow: undefined,
       waterTemp: undefined,
       temp: undefined,
-      beforeBar: undefined,
-      afterBar: undefined,
-      diveDeepest: undefined,
+      beforeTank: undefined,
+      afterTank: undefined,
+      diveDepth: undefined,
       pointDepth: undefined,
       diveTime: undefined,
       decompressionTime: undefined,
-      visualField: undefined,
+      distanceView: undefined,
     }));
   };
 
@@ -144,19 +246,19 @@ export default function Log() {
       nextComponent={
         pageType === 'log' ? (
           <button
-            disabled={!logData.place}
+            disabled={!logData.address}
             onClick={() => setPageType('logDetail')}
             className="text-[#426BFF] text-lg font-semibold disabled:text-[#d9d9d9]"
           >
             다음
           </button>
         ) : (
-          <Link
-            href="/feed/1"
+          <button
             className="text-[#426BFF] text-lg font-semibold disabled:text-[#d9d9d9]"
+            onClick={fetchDiveLogs}
           >
             등록
-          </Link>
+          </button>
         )
       }
       backComponent={
@@ -200,9 +302,9 @@ export default function Log() {
         {pageType === 'log' ? (
           <>
             <StepContainer step={1} title="바다장소 등록">
-              {logData.place ? (
+              {logData.address ? (
                 <Button color="selected" onClick={() => setPlaceModal(true)}>
-                  <span className=" text-lg text-[#426BFF]">{logData.place}</span>
+                  <span className=" text-lg text-[#426BFF]">{logData.address}</span>
                 </Button>
               ) : (
                 <Button onClick={() => setPlaceModal(true)}>
@@ -216,8 +318,10 @@ export default function Log() {
                 className={`relative h-[50px] flex items-center w-full border-[1px] border-[#d9d9d9] border-solid rounded-lg justify-center`}
                 onClick={() => dateRef?.current && dateRef.current.showPicker()}
               >
-                <span className={`text-[17px] ${!logData.place ? 'text-[#7f7f7f]' : 'text-black'}`}>
-                  {convertDashToKorean(logData.date)}
+                <span
+                  className={`text-[17px] ${!logData.address ? 'text-[#7f7f7f]' : 'text-black'}`}
+                >
+                  {convertDashToKorean(logData.diveAt)}
                 </span>
                 <div className="absolute right-7">
                   <ArrowDown />
@@ -226,28 +330,28 @@ export default function Log() {
                   ref={dateRef}
                   type="date"
                   className="absolute bottom-0 left-0 opacity-0"
-                  onChange={(e) => updateLogData('date', e.target.value)}
+                  onChange={(e) => updateLogData('diveAt', e.target.value)}
                 />
               </button>
             </StepContainer>
 
             <StepContainer step={3} title="활동유형 선택">
               <Select
-                disabled={!logData.place}
-                data={TYPE_SELECT_DATA}
-                value={TYPE_SELECT_DATA.filter((d) => d.selectedValue === logData.divingType)[0]}
-                onChange={handleClickDivingType}
+                disabled={!logData.address}
+                data={DIVE_TYPE_SELECT_DATA}
+                value={DIVE_TYPE_SELECT_DATA.filter((d) => d.selectedValue === logData.diveType)[0]}
+                onChange={handleClickDiveType}
               />
             </StepContainer>
 
             <StepContainer step={4} title="만족도 선택">
               <div className="h-[50px] w-full border-[1px] border-[#d9d9d9] border-solid rounded-lg flex items-center justify-center">
-                <Satisfaction onChange={(value) => updateLogData('satisfaction', value)} />
+                <Satisfaction onChange={(value) => updateLogData('score', value)} />
               </div>
             </StepContainer>
 
             <StepContainer step={5} title="등록할 사진선택">
-              <ImageUploader />
+              <ImageUploader setImageForm={setImageForm} />
             </StepContainer>
 
             <StepContainer step={6} title="해시태그 등록">
@@ -262,87 +366,84 @@ export default function Log() {
               <Input
                 placeholder="한줄후기 입력"
                 style={{ border: '1px solid #a5a5a5' }}
-                onChange={(e) => updateLogData('comment', e.target.value)}
+                onChange={(e) => updateLogData('review', e.target.value)}
               />
             </StepContainer>
           </>
         ) : (
           <>
-            {(logData.divingType === 'free' || logData.divingType === 'scuba') && (
+            {(logData.diveType === 'FREEDIVING' || logData.diveType === 'SCUBA') && (
               <StepContainer step={8} title="로그데이터 선택">
                 <LogDataSelector
                   title="입수 형태"
-                  value={logData.equipmentType || ''}
+                  value={logData.approachType || ''}
                   selectedData={[
                     {
-                      selectedValue: 'coast',
+                      selectedValue: 'BEATCH',
                       displayValue: '해안',
-                      onClick: () => updateLogData('equipmentType', 'coast'),
+                      onClick: () => updateLogData('approachType', 'BEATCH'),
                     },
                     {
-                      selectedValue: 'boat',
+                      selectedValue: 'BOAT',
                       displayValue: '보트',
-                      onClick: () => updateLogData('equipmentType', 'boat'),
+                      onClick: () => updateLogData('approachType', 'BOAT'),
                     },
                     {
-                      selectedValue: 'etc',
+                      selectedValue: 'ETC',
                       displayValue: '기타',
-                      onClick: () => updateLogData('equipmentType', 'etc'),
+                      onClick: () => updateLogData('approachType', 'ETC'),
                     },
                   ]}
                 />
 
                 <LogDataSelector
                   title="수면해류"
-                  value={logData.surfaceCurrentType || ''}
+                  value={logData.surfaceFlow || ''}
                   selectedData={[
                     {
-                      selectedValue: 'strong',
+                      selectedValue: 'STRONG',
                       displayValue: '강한해류',
-                      onClick: () => updateLogData('surfaceCurrentType', 'strong'),
+                      onClick: () => updateLogData('surfaceFlow', 'STRONG'),
                     },
                     {
-                      selectedValue: 'weak',
+                      selectedValue: 'MIDDLE',
+                      displayValue: '중간해류',
+                      onClick: () => updateLogData('surfaceFlow', 'MIDDLE'),
+                    },
+                    {
+                      selectedValue: 'WEAK',
                       displayValue: '약한해류',
-                      onClick: () => updateLogData('surfaceCurrentType', 'weak'),
-                    },
-                    {
-                      selectedValue: 'none',
-                      displayValue: '조류없음',
-                      onClick: () => updateLogData('surfaceCurrentType', 'none'),
+                      onClick: () => updateLogData('surfaceFlow', 'WEAK'),
                     },
                   ]}
                 />
 
                 <LogDataSelector
                   title="심층해류"
-                  value={logData.deepCurrentType || ''}
+                  value={logData.deepFlow || ''}
                   selectedData={[
                     {
-                      selectedValue: 'strong',
+                      selectedValue: 'STRONG',
                       displayValue: '강한해류',
-                      onClick: () => updateLogData('deepCurrentType', 'strong'),
+                      onClick: () => updateLogData('deepFlow', 'STRONG'),
                     },
                     {
-                      selectedValue: 'weak',
+                      selectedValue: 'MIDDLE',
+                      displayValue: '중간해류',
+                      onClick: () => updateLogData('deepFlow', 'MIDDLE'),
+                    },
+                    {
+                      selectedValue: 'WEAK',
                       displayValue: '약한해류',
-                      onClick: () => updateLogData('deepCurrentType', 'weak'),
-                    },
-                    {
-                      selectedValue: 'none',
-                      displayValue: '조류없음',
-                      onClick: () => updateLogData('deepCurrentType', 'none'),
+                      onClick: () => updateLogData('deepFlow', 'WEAK'),
                     },
                   ]}
                 />
               </StepContainer>
             )}
 
-            <StepContainer
-              step={logData.divingType === 'snorkeling' ? 8 : 9}
-              title="로그데이터 기록"
-            >
-              {(logData.divingType === 'free' || logData.divingType === 'scuba') && (
+            <StepContainer step={logData.diveType === 'SNORKEL' ? 8 : 9} title="로그데이터 기록">
+              {(logData.diveType === 'FREEDIVING' || logData.diveType === 'SCUBA') && (
                 <div className="flex gap-[17px]">
                   <SubTitleContainer title="수온">
                     <InputWithUnit
@@ -365,7 +466,7 @@ export default function Log() {
                 </div>
               )}
 
-              {logData.divingType === 'scuba' && (
+              {logData.diveType === 'SCUBA' && (
                 <>
                   <div className="flex gap-[17px]">
                     <SubTitleContainer title="입수전 잔량">
@@ -373,8 +474,8 @@ export default function Log() {
                         _size="small"
                         unit={'bar'}
                         type="number"
-                        value={logData.beforeBar}
-                        onChange={(e) => updateLogData('beforeBar', Number(e.target.value))}
+                        value={logData.beforeTank}
+                        onChange={(e) => updateLogData('beforeTank', Number(e.target.value))}
                       />
                     </SubTitleContainer>
                     <SubTitleContainer title="입수후 잔량">
@@ -382,8 +483,8 @@ export default function Log() {
                         _size="small"
                         unit={'bar'}
                         type="number"
-                        value={logData.afterBar}
-                        onChange={(e) => updateLogData('afterBar', Number(e.target.value))}
+                        value={logData.afterTank}
+                        onChange={(e) => updateLogData('afterTank', Number(e.target.value))}
                       />
                     </SubTitleContainer>
                   </div>
@@ -394,8 +495,8 @@ export default function Log() {
                         _size="small"
                         unit={'m'}
                         type="number"
-                        value={logData.diveDeepest}
-                        onChange={(e) => updateLogData('diveDeepest', Number(e.target.value))}
+                        value={logData.diveDepth}
+                        onChange={(e) => updateLogData('diveDepth', Number(e.target.value))}
                       />
                     </SubTitleContainer>
                     <SubTitleContainer title="포인트 수심">
@@ -439,8 +540,8 @@ export default function Log() {
                       _size="small"
                       unit={'m'}
                       type="number"
-                      value={logData.visualField}
-                      onChange={(e) => updateLogData('visualField', Number(e.target.value))}
+                      value={logData.distanceView}
+                      onChange={(e) => updateLogData('distanceView', Number(e.target.value))}
                     />
                   </SubTitleContainer>
                 </div>
