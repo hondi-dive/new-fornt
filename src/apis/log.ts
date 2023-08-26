@@ -1,96 +1,57 @@
 import axios from './index';
 
 export const fetchDiveLogsDetail = async (diveLogId: number) => {
-  try {
-    const res = await axios.get(`/hondi/divelogs/${diveLogId}`);
-    return res;
-  } catch (error) {
-    alert('서버 에러 입니다.');
-  }
+  const res = await axios.get(`/hondi/divelogs/${diveLogId}`);
+  return res;
 };
 
 export const fetchTogglePublic = async (diveLogId: number) => {
-  try {
-    const res = await axios.patch(`/hondi/divelogs/${diveLogId}`);
-    return res;
-  } catch (error) {
-    alert('서버 에러 입니다.');
-  }
+  const res = await axios.patch(`/hondi/divelogs/${diveLogId}`);
+  return res;
 };
 
 export const fetchCreateDiveLogs = async (data: FormData) => {
-  try {
-    const headers = {
+  const config = {
+    headers: {
       'Content-Type': 'multipart/form-data',
-    };
+    },
+  };
 
-    const res = await axios.post('/hondi/divelogs', data, headers);
-
-    return res;
-  } catch (error) {
-    alert('서버 에러 입니다.');
-  }
+  const res = await axios.post('/hondi/divelogs', data, config);
+  return res;
 };
 
 export const fetchDiveLogsLike = async (diveLogId: number) => {
-  try {
-    const res = await axios.post(`/hondi/divelogs/${diveLogId}/like`);
-    return res;
-  } catch (error) {
-    alert('서버 에러 입니다.');
-  }
+  const res = await axios.post(`/hondi/divelogs/${diveLogId}/like`);
+  return res;
 };
 
 export const fetchCreateComment = async (data: { divelogId: number; content: string }) => {
-  try {
-    const res = await axios.post(`/hondi/comment`, data);
-    return res;
-  } catch (error) {
-    alert('서버 에러 입니다.');
-  }
+  const res = await axios.post(`/hondi/comment`, data);
+  return res;
 };
 
 export const fetchCheckMyDiveLog = async (diveLogId: number) => {
-  try {
-    const res = await axios.get(`/hondi/users/divelogs/${diveLogId}/is_mine`);
-    return res;
-  } catch (error) {
-    alert('서버 에러 입니다.');
-  }
+  const res = await axios.get(`/hondi/users/divelogs/${diveLogId}/is_mine`);
+  return res;
 };
 
 export const fetchMyDiveLog = async () => {
-  try {
-    const res = await axios.get(`/hondi/users/divelogs/my`);
-    return res;
-  } catch (error) {
-    alert('서버 에러 입니다.');
-  }
+  const res = await axios.get(`/hondi/users/divelogs/my`);
+  return res;
 };
 
 export const fetchLikeDiveLog = async () => {
-  try {
-    const res = await axios.get(`/hondi/users/divelogs/like`);
-    return res;
-  } catch (error) {
-    alert('서버 에러 입니다.');
-  }
+  const res = await axios.get(`/hondi/users/divelogs/like`);
+  return res;
 };
 
 export const fetchCommentedDiveLog = async () => {
-  try {
-    const res = await axios.get(`/hondi/users/divelogs/commented`);
-    return res;
-  } catch (error) {
-    alert('서버 에러 입니다.');
-  }
+  const res = await axios.get(`/hondi/users/divelogs/commented`);
+  return res;
 };
 
 export const fetchUserDetail = async () => {
-  try {
-    const res = await axios.get(`/hondi/users/detail`);
-    return res;
-  } catch (error) {
-    alert('서버 에러 입니다.');
-  }
+  const res = await axios.get(`/hondi/users/detail`);
+  return res;
 };
