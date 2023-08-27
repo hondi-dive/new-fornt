@@ -5,13 +5,16 @@ import useWindowSize from '@/hooks/useWindowSize';
 import Image from 'next/image';
 import { ChangeEvent, useRef, useState } from 'react';
 
-export default function ImageUploader() {
+interface Props {
+  setImageForm: React.Dispatch<React.SetStateAction<FormData | undefined>>;
+}
+
+export default function ImageUploader({ setImageForm }: Props) {
   const fileInputRef = useRef<HTMLInputElement>(null);
   const windowSize = useWindowSize();
   const size = (windowSize?.width || 393) - 48;
 
   const [image, setImage] = useState('');
-  const [imageForm, setImageForm] = useState<FormData>();
 
   const handleClick = () => {
     fileInputRef.current ? fileInputRef.current.click() : console.log('fileInput not created');
