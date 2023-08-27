@@ -91,13 +91,13 @@ export default function Log() {
     switch (logData.diveType) {
       case 'SCUBA':
         imageForm?.append(
-          'contens',
+          'contents',
           new Blob([JSON.stringify(logData)], { type: 'application/json' }),
         );
         break;
       case 'FREEDIVING':
         imageForm?.append(
-          'contens',
+          'contents',
           new Blob(
             [
               JSON.stringify({
@@ -124,7 +124,7 @@ export default function Log() {
         break;
       case 'SNORKEL':
         imageForm?.append(
-          'contens',
+          'contents',
           new Blob(
             [
               JSON.stringify({
