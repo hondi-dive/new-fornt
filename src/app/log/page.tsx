@@ -330,7 +330,7 @@ export default function Log() {
                   ref={dateRef}
                   type="date"
                   className="absolute bottom-0 left-0 opacity-0"
-                  onChange={(e) => updateLogData('diveAt', e.target.value)}
+                  onChange={(e) => updateLogData('diveAt', new Date().toISOString())}
                 />
               </button>
             </StepContainer>
