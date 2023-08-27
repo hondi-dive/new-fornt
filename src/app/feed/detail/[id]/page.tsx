@@ -1,109 +1,75 @@
 'use client';
-
-import ArrowCircle from '@/assets/icons/arrowCircle.svg';
-import Link from 'next/link';
-import FeedDetailRead from '@/components/page/feed/FeedDetailRead';
-import FeedComment from '@/components/page/feed/FeedComment';
-import HeaderLayout from '@/layouts/HeaderLayout';
-import Share from '@/assets/icons/share.svg';
-import { useState } from 'react';
-import XIcon from '@/assets/icons/XIcon';
+import { useEffect, useState } from 'react';
+import { fetchDiveLogsDetail } from '@/apis/log';
+import { FeedDetailPage, FeedDetailType } from '@/types/feed';
+import FeedDetailMain from '@/components/page/feed/FeedDetailMain';
+import FeedDetailLog from '@/components/page/feed/FeedDetailLog';
 
 interface Props {
   params: { id: string };
 }
 
 export default function FeedDetail({ params }: Props) {
-  const [pageType, setPageType] = useState<'feedDetail' | 'comment'>('feedDetail');
+  const [page, setPage] = useState<FeedDetailPage>('feedDetailMain');
+  const [feedData, setFeedData] = useState<FeedDetailType>({
+    writer: {
+      id: 0,
+      nickName: '',
+      imageUri: '',
+      email: '',
+    },
+    commentCnt: 0,
+    likeCnt: 0,
+    address: '',
+    latitude: 0,
+    longitude: 0,
+    imageUrl: '',
+    diveType: 'SCUBA',
+    score: 0,
+    review: '',
+    approachType: '',
+    surfaceFlow: '',
+    deepFlow: '',
+    temp: 0,
+    waterTemp: 0,
+    beforeTank: 0,
+    afterTank: 0,
+    diveDepth: 0,
+    pointDepth: 0,
+    diveAt: '',
+    diveTime: 0,
+    decompressionTime: 0,
+    distanceView: 0,
+    hashTags: [],
+  });
 
-  const positions = [
-    {
-      id: 1,
-      title: '판포포구',
-    },
-    {
-      id: 2,
-      title: '월령포구',
-    },
-    {
-      id: 3,
-      title: '범섬',
-    },
-    {
-      id: 4,
-      title: '황우지선녀탕',
-    },
-    {
-      id: 5,
-      title: '김녕포구',
-    },
-    {
-      id: 6,
-      title: '김녕해변',
-    },
-    {
-      id: 7,
-      title: '중문해수욕장',
-    },
-    {
-      id: 8,
-      title: '함덕해변',
-    },
-    {
-      id: 9,
-      title: '이호테우해변',
-    },
-    {
-      id: 10,
-      title: '협재해변',
-    },
-  ];
+  useEffect(() => {
+    fetchFeedData(params.id);
+  }, [params.id]);
 
-  const spot = positions.find((position) => position.id === Number(params.id)) ?? { title: '' };
-
-  const handleShare = () => {
-    alert('서비스 준비중 입니다.');
+  const fetchFeedData = async (id: string) => {
+    try {
+      const res: any = await fetchDiveLogsDetail(id);
+      setFeedData(res);
+    } catch (error) {
+      console.log(error);
+      alert('서버 에러 입니다.');
+    }
   };
 
-  const routeCommentPage = () => {
-    setPageType('comment');
+  const routeFeedDetail = (value: FeedDetailPage) => {
+    setPage(value);
   };
 
   return (
-    <div className="bg-[#567BFF] h-screen">
-      <HeaderLayout
-        title={pageType === 'feedDetail' ? spot.title : '댓글'}
-        backComponent={pageType === 'comment' ? <div /> : undefined}
-        nextComponent={
-          pageType === 'feedDetail' ? (
-            <button onClick={handleShare}>
-              <Share />
-            </button>
-          ) : (
-            <button onClick={() => setPageType('feedDetail')}>
-              <XIcon size={24} color="#000" />
-            </button>
-          )
-        }
-      >
-        <div className="w-full">
-          {pageType === 'feedDetail' ? (
-            <FeedDetailRead routeCommentPage={routeCommentPage} />
-          ) : (
-            <FeedComment />
-          )}
-
-          <div className="h-[71px] file: flex justify-center items-center py-5">
-            <Link
-              href={`/feed/detail/log/${params.id}`}
-              className="flex justify-center items-center"
-            >
-              <span className=" text-white text-lg mr-3">로그 기록 보러가기</span>
-              <ArrowCircle />
-            </Link>
-          </div>
+    <>
+      {page === 'feedDetailMain' ? (
+        <div className="bg-[#567BFF] h-screen">
+          <FeedDetailMain feedData={feedData} routeFeedDetail={routeFeedDetail} />
         </div>
-      </HeaderLayout>
-    </div>
+      ) : (
+        <FeedDetailLog feedData={feedData} routeFeedDetail={routeFeedDetail} />
+      )}
+    </>
   );
 }
