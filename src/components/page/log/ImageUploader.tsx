@@ -42,7 +42,7 @@ export default function ImageUploader({ setImageForm }: Props) {
     };
 
     const formData = new FormData();
-    formData.append('image', file);
+    formData.append('imageFile', file);
     setImageForm(formData);
   };
 
