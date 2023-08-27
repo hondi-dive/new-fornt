@@ -11,14 +11,14 @@ export default async function Login() {
       <div className=" text-black text-sm font-medium mb-6 text-center">
         SNS 계정으로 간편 가입하기
       </div>
-      <button className="cursor-pointer w-full rounded-lg bg-[#FEE500] text-black inline-flex items-center relative justify-center h-14">
-        <a href="http://api.hondidive.site/oauth2/authorization/kakao">
+      <a href="https://api.hondidive.site/oauth2/authorization/kakao">
+        <button className="cursor-pointer w-full rounded-lg bg-[#FEE500] text-black inline-flex items-center relative justify-center h-14">
           <div className="absolute left-3 top-5">
             <KakaoIcon />
           </div>
           카카오 로그인
-        </a>
-      </button>
+        </button>
+      </a>
     </div>
   );
 }

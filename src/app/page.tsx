@@ -1,7 +1,7 @@
 'use client';
 
 import { useRouter } from 'next/navigation';
-
+import { getCookie } from 'cookies-next';
 import useTimeout from '@/hooks/useTimeout';
 import LogoIcon from '@/assets/icons/logo.svg';
 import LeftHandIcon from '@/assets/icons/leftHand.svg';
@@ -12,7 +12,8 @@ export default function Page() {
   const router = useRouter();
 
   useTimeout(() => {
-    router.push('/home');
+    if (getCookie('access_token')) return router.push('/home');
+    router.push('/login');
   }, 3000);
 
   return (
@@ -24,7 +25,7 @@ export default function Page() {
           <span className=" ml-5 text-[80px] font-['SlowSlow'] text-white">이거바당</span>
         </div>
       </div>
-      <div className="animate-[rightHand_4s_linear_infinite] z-10">
+      {/* <div className="animate-[rightHand_4s_linear_infinite] z-10">
         <RightHandIcon />
       </div>
       <div className="relative flex justify-center items-center animate-[leftHand_4s_linear_infinite]">
@@ -32,7 +33,7 @@ export default function Page() {
         <div className="absolute">
           <PalmIcon />
         </div>
-      </div>
+      </div> */}
     </div>
   );
 }

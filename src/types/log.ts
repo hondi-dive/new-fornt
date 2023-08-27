@@ -1,8 +1,10 @@
+export type DiveType = 'SNORKEL' | 'FREEDIVING' | 'SCUBA';
+
 export type LogData = {
   address: string;
   latitude: number;
   longitude: number;
-  diveType: 'SNORKEL' | 'FREEDIVING' | 'SCUBA';
+  diveType: DiveType;
   diveAt: string;
   score: 0 | 1 | 2 | 3 | 4 | 5;
   review: string;

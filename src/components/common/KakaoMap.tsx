@@ -1,10 +1,11 @@
 'use client';
 
 import React, { useEffect, useRef, useCallback, useState } from 'react';
+
 import Script from 'next/script';
 import Head from 'next/head';
 import Link from 'next/link';
-
+import { pixelsToMeters } from '@/utils/meter';
 import { KakaoInfoWindow, KakaoLatLng, KakaoMap, KakaoMarker } from '@/types/kakao';
 import Modal from '@/components/common/Modal';
 import MapPin from '@/assets/icons/mapPin.svg';
@@ -111,6 +112,8 @@ const NEXT_PUBLIC_KAKAO_KEY = process.env.NEXT_PUBLIC_KAKAO_APP_KEY;
 const KakaoMap = () => {
   const containerRef = useRef<HTMLDivElement>(null);
   const [showModal, setShowModal] = useState(false);
+  const [center, setCenter] = useState<any>();
+  const [zoomLevel, setZoomLevel] = useState<any>();
   const [searchText, setSearchText] = useState('');
   const [checkedSpot, setCheckedSpot] = useState<{
     title: string;
@@ -131,9 +134,17 @@ const KakaoMap = () => {
         level: 10,
       });
 
+      window.kakao.maps.event.addListener(map, 'zoom_changed', () => {
+        const zoomLevel = map.getLevel() as number;
+        setZoomLevel(zoomLevel);
+      });
+      window.kakao.maps.event.addListener(map, 'center_changed', function () {
+        const zoomLevel = map.getCenter();
+        setCenter(zoomLevel);
+      });
       var imageSrc = 'https://i.postimg.cc/qMRDLNNg/spot.png',
-        imageSize = new window.kakao.maps.Size(48, 48),
-        imageOption = { offset: new window.kakao.maps.Point(24, 48) };
+        imageSize = new window.kakao.maps.Size(24, 24),
+        imageOption = { offset: new window.kakao.maps.Point(12, 24) };
       var markerImage = new window.kakao.maps.MarkerImage(imageSrc, imageSize, imageOption);
 
       for (let i = 0; i < positions.length; i++) {
@@ -163,6 +174,10 @@ const KakaoMap = () => {
       initMap();
     }
   }, [initMap]);
+
+  useEffect(() => {
+    console.log(center, pixelsToMeters(zoomLevel, containerRef.current?.offsetHeight));
+  }, [center, zoomLevel, containerRef.current]);
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     setSearchText(e.target.value);

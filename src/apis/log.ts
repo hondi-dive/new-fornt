@@ -1,11 +1,11 @@
 import axios from './index';
 
-export const fetchDiveLogsDetail = async (diveLogId: number) => {
+export const fetchDiveLogsDetail = async (diveLogId: string) => {
   const res = await axios.get(`/hondi/divelogs/${diveLogId}`);
   return res;
 };
 
-export const fetchTogglePublic = async (diveLogId: number) => {
+export const fetchTogglePublic = async (diveLogId: string) => {
   const res = await axios.patch(`/hondi/divelogs/${diveLogId}`);
   return res;
 };
@@ -21,7 +21,7 @@ export const fetchCreateDiveLogs = async (data: FormData) => {
   return res;
 };
 
-export const fetchDiveLogsLike = async (diveLogId: number) => {
+export const fetchDiveLogsLike = async (diveLogId: string) => {
   const res = await axios.post(`/hondi/divelogs/${diveLogId}/like`);
   return res;
 };
@@ -31,7 +31,7 @@ export const fetchCreateComment = async (data: { divelogId: number; content: str
   return res;
 };
 
-export const fetchCheckMyDiveLog = async (diveLogId: number) => {
+export const fetchCheckMyDiveLog = async (diveLogId: string) => {
   const res = await axios.get(`/hondi/users/divelogs/${diveLogId}/is_mine`);
   return res;
 };
