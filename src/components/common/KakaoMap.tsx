@@ -1,6 +1,7 @@
 'use client';
 
 import React, { useEffect, useRef, useCallback, useState } from 'react';
+import { useRouter } from 'next/navigation';
 
 import Script from 'next/script';
 import Head from 'next/head';
@@ -12,79 +13,6 @@ import MapPin from '@/assets/icons/mapPin.svg';
 import ArrowCircle from '@/assets/icons/arrowCircle.svg';
 import SearchInput from '@/components/common/SearchInput';
 import { fetchMap } from '@/apis/map';
-
-const positions = [
-  {
-    id: 1,
-    title: '판포포구',
-    address: '제주특별자치도 제주시 한경면 판포리 2877-1',
-    lat: 33.365216,
-    lng: 126.200269,
-  },
-  {
-    id: 2,
-    title: '월령포구',
-    address: '제주특별자치도 제주시 특별자치도, 한림읍 월령리 317-1',
-    lat: 33.378558,
-    lng: 126.21632,
-  },
-  {
-    id: 3,
-    title: '범섬',
-    address: '제주특별자치도 서귀포시 법환동 산1-1',
-    lat: 33.218354,
-    lng: 126.516717,
-  },
-  {
-    id: 4,
-    title: '황우지선녀탕',
-    address: '제주특별자치도 서귀포시 서홍동 795-5',
-    lat: 33.234152,
-    lng: 126.463248,
-  },
-  {
-    id: 5,
-    title: '김녕포구',
-    address: '제주특별자치도 제주시 구좌읍 김녕리 4074-2',
-    lat: 33.239479,
-    lng: 126.548912,
-  },
-  {
-    id: 6,
-    title: '김녕해변',
-    address: '제주특별자치도 제주시 구좌읍 구좌해안로 237',
-    lat: 33.557752,
-    lng: 126.758989,
-  },
-  {
-    id: 7,
-    title: '중문해수욕장',
-    address: '제주특별자치도 서귀포시 중문관광로72번길 29-51',
-    lat: 33.243064,
-    lng: 126.412131,
-  },
-  {
-    id: 8,
-    title: '함덕해변',
-    address: '제주특별자치도 제주시 조천읍 조함해안로 525',
-    lat: 33.543495,
-    lng: 126.669673,
-  },
-  {
-    id: 9,
-    title: '이호테우해변',
-    address: '제주특별자치도 제주시 도리로 20',
-    lat: 33.498197,
-    lng: 126.45293,
-  },
-  {
-    id: 10,
-    title: '협재해변',
-    address: '제주특별자치도 제주시 한림읍 한림로 329-10',
-    lat: 33.39439,
-    lng: 126.239582,
-  },
-];
 
 declare global {
   interface Window {
@@ -111,9 +39,11 @@ declare global {
 const NEXT_PUBLIC_KAKAO_KEY = process.env.NEXT_PUBLIC_KAKAO_APP_KEY;
 
 const KakaoMap = () => {
+  const router = useRouter();
   const containerRef = useRef<HTMLDivElement>(null);
   const [showModal, setShowModal] = useState(false);
-  const [center, setCenter] = useState<any>();
+  const [center2, setCenter2] = useState<any>({ Ma: 33.4, La: 126.55 });
+  const [positions, setPositions] = useState<any>([]);
   const [zoomLevel, setZoomLevel] = useState<any>();
   const [searchText, setSearchText] = useState('');
   const [checkedSpot, setCheckedSpot] = useState<{
@@ -129,43 +59,48 @@ const KakaoMap = () => {
 
   const initMap = useCallback(() => {
     if (containerRef.current) {
-      const center = new window.kakao.maps.LatLng(33.4, 126.55);
+      const center = new window.kakao.maps.LatLng(center2.Ma, center2.La) as any;
       const map = new window.kakao.maps.Map(containerRef.current, {
         center,
         level: 10,
       });
 
-      window.kakao.maps.event.addListener(map, 'zoom_changed', () => {
-        const zoomLevel = map.getLevel() as number;
-        setZoomLevel(zoomLevel);
-      });
-      window.kakao.maps.event.addListener(map, 'center_changed', function () {
-        const center = map.getCenter();
+      const updateMarkers = (newPositions: any) => {
+        for (let i = 0; i < newPositions.length; i++) {
+          const marker = new window.kakao.maps.Marker({
+            map: map,
+            position: new window.kakao.maps.LatLng(
+              newPositions[i].latitude,
+              newPositions[i].longitude,
+            ),
+            image: markerImage,
+          });
+          console.log(newPositions[i]);
+          window.kakao.maps.event.addListener(marker, 'click', () => {
+            router.push(`/feed/detail/${newPositions[i].divelogId}`);
+          });
+        }
+      };
 
-        setCenter(center);
-      });
+      const handleCenterChange = async () => {
+        const center = map.getCenter();
+        const zoomLevel = map.getLevel() as number;
+
+        const res = await fetchMap(
+          center.getLat(),
+          center.getLng(),
+          pixelsToMeters(zoomLevel, containerRef.current?.offsetHeight) ?? 500000,
+        );
+
+        updateMarkers(res);
+      };
+      window.kakao.maps.event.addListener(map, 'zoom_changed', handleCenterChange);
+      window.kakao.maps.event.addListener(map, 'center_changed', handleCenterChange);
+
       var imageSrc = 'https://i.postimg.cc/qMRDLNNg/spot.png',
         imageSize = new window.kakao.maps.Size(24, 24),
         imageOption = { offset: new window.kakao.maps.Point(12, 24) };
       var markerImage = new window.kakao.maps.MarkerImage(imageSrc, imageSize, imageOption);
-
-      for (let i = 0; i < positions.length; i++) {
-        const marker = new window.kakao.maps.Marker({
-          map: map,
-          position: new window.kakao.maps.LatLng(positions[i].lat, positions[i].lng),
-          image: markerImage,
-        });
-
-        window.kakao.maps.event.addListener(marker, 'click', () => {
-          setShowModal(true);
-          setShowModal(true);
-          setCheckedSpot({
-            title: positions[i].title,
-            address: positions[i].address,
-            id: positions[i].id,
-          });
-        });
-      }
 
       setMap(map);
     }
@@ -177,19 +112,19 @@ const KakaoMap = () => {
     }
   }, [initMap]);
 
-  const loadMap = async (latitude: number, longitude: number, sideLength: number | null) => {
+  const loadMap = async (latitude: number, longitude: number, sideLength: number) => {
     const res = await fetchMap(latitude, longitude, sideLength);
-    console.log(res);
+
+    setPositions(res);
   };
 
   useEffect(() => {
-    console.log(
-      center.Ma,
-      center.La,
-      pixelsToMeters(zoomLevel, containerRef.current?.offsetHeight),
+    loadMap(
+      center2.Ma,
+      center2.La,
+      pixelsToMeters(zoomLevel, containerRef.current?.offsetHeight) ?? 500000,
     );
-    loadMap(center.Ma, center.La, pixelsToMeters(zoomLevel, containerRef.current?.offsetHeight));
-  }, [center, zoomLevel, containerRef.current]);
+  }, [center2, zoomLevel, containerRef.current]);
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     setSearchText(e.target.value);
@@ -198,7 +133,7 @@ const KakaoMap = () => {
   const onSearch = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
 
-    const foundItem = positions.find((item) => item.title.includes(searchText)) as any;
+    const foundItem = positions.find((item: any) => item.title.includes(searchText)) as any;
 
     if (map && foundItem) {
       const moveLatLon = new window.kakao.maps.LatLng(foundItem?.lat, foundItem?.lng);
