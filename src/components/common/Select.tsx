@@ -13,15 +13,20 @@ interface Props {
   value: SelectData;
   onChange: (value: SelectData) => void;
   disabled?: boolean;
+  placeholder?: string;
+  action?: any;
 }
 
-export default function Select({ data, value, onChange, disabled }: Props) {
+export default function Select({ data, value, onChange, disabled, placeholder, action }: Props) {
   return (
     <Listbox value={value} onChange={onChange}>
-      <div className="relative mt-1">
-        <Listbox.Button className="relative h-[50px] flex items-center w-full border-[1px] border-[#d9d9d9] border-solid rounded-lg justify-center z-10">
+      <div className="relative mt-1 w-full">
+        <Listbox.Button
+          className="relative h-[50px] flex items-center w-full border-[1px] border-[#d9d9d9] border-solid rounded-lg justify-center z-10"
+          onClick={action}
+        >
           <span className={`block truncate ${disabled ? 'text-[#7f7f7f]' : 'text-black'}`}>
-            {value.displayValue}
+            {value ? value.displayValue : placeholder}
           </span>
           <span className="absolute right-7">
             <ArrowDown />
