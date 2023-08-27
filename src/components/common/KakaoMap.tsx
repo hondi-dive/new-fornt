@@ -11,6 +11,7 @@ import Modal from '@/components/common/Modal';
 import MapPin from '@/assets/icons/mapPin.svg';
 import ArrowCircle from '@/assets/icons/arrowCircle.svg';
 import SearchInput from '@/components/common/SearchInput';
+import { fetchMap } from '@/apis/map';
 
 const positions = [
   {
@@ -139,8 +140,9 @@ const KakaoMap = () => {
         setZoomLevel(zoomLevel);
       });
       window.kakao.maps.event.addListener(map, 'center_changed', function () {
-        const zoomLevel = map.getCenter();
-        setCenter(zoomLevel);
+        const center = map.getCenter();
+
+        setCenter(center);
       });
       var imageSrc = 'https://i.postimg.cc/qMRDLNNg/spot.png',
         imageSize = new window.kakao.maps.Size(24, 24),
@@ -175,8 +177,18 @@ const KakaoMap = () => {
     }
   }, [initMap]);
 
+  const loadMap = async (latitude: number, longitude: number, sideLength: number | null) => {
+    const res = await fetchMap(latitude, longitude, sideLength);
+    console.log(res);
+  };
+
   useEffect(() => {
-    console.log(center, pixelsToMeters(zoomLevel, containerRef.current?.offsetHeight));
+    console.log(
+      center.Ma,
+      center.La,
+      pixelsToMeters(zoomLevel, containerRef.current?.offsetHeight),
+    );
+    loadMap(center.Ma, center.La, pixelsToMeters(zoomLevel, containerRef.current?.offsetHeight));
   }, [center, zoomLevel, containerRef.current]);
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
