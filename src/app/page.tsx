@@ -25,7 +25,7 @@ export default function Page() {
           <span className=" ml-5 text-[80px] font-['SlowSlow'] text-white">이거바당</span>
         </div>
       </div>
-      <div className="animate-[rightHand_4s_linear_infinite] z-10">
+      {/* <div className="animate-[rightHand_4s_linear_infinite] z-10">
         <RightHandIcon />
       </div>
       <div className="relative flex justify-center items-center animate-[leftHand_4s_linear_infinite]">
@@ -33,7 +33,7 @@ export default function Page() {
         <div className="absolute">
           <PalmIcon />
         </div>
-      </div>
+      </div> */}
     </div>
   );
 }

@@ -143,8 +143,8 @@ const KakaoMap = () => {
         setCenter(zoomLevel);
       });
       var imageSrc = 'https://i.postimg.cc/qMRDLNNg/spot.png',
-        imageSize = new window.kakao.maps.Size(48, 48),
-        imageOption = { offset: new window.kakao.maps.Point(24, 48) };
+        imageSize = new window.kakao.maps.Size(24, 24),
+        imageOption = { offset: new window.kakao.maps.Point(12, 24) };
       var markerImage = new window.kakao.maps.MarkerImage(imageSrc, imageSize, imageOption);
 
       for (let i = 0; i < positions.length; i++) {
