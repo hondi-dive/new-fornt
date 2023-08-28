@@ -78,6 +78,7 @@ export default function FeedDetail({ params }: Props) {
             feedData={feedData}
             routeFeedDetail={routeFeedDetail}
             toggleLike={toggleLike}
+            diveLogId={params.id}
           />
         </div>
       ) : (

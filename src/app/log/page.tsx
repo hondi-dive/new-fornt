@@ -60,13 +60,12 @@ export default function Log() {
   const fetchDiveLogs = async () => {
     try {
       const formData = createFormData();
-      if (!formData) return;
+      if (!formData) return alert('이미지를 넣어주세요');
       await fetchCreateDiveLogs(formData);
 
-      router.replace('/feed/1');
+      router.replace('/feeds');
     } catch (error) {
       console.log(error);
-      alert('서버 에러 입니다.');
     }
   };
 
