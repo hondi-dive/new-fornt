@@ -60,6 +60,7 @@ export default function Log() {
 
   const fetchDiveLogs = async () => {
     try {
+      if (!checkValidData()) return;
       const formData = createFormData();
       if (!formData) return alert('이미지를 넣어주세요');
       await fetchCreateDiveLogs(formData);
@@ -67,7 +68,77 @@ export default function Log() {
       router.replace('/feeds');
     } catch (error) {
       console.log(error);
+      alert('피드 등록에 실패 하였습니다.');
     }
+  };
+
+  const checkValidData = () => {
+    if (imageForm === undefined) {
+      alert('피드 이미지를 설정해주세요');
+      return false;
+    }
+
+    if (logData.isPublic === -1) {
+      alert('자물쇠를 눌러 공개 비공개를 설정해주세요');
+      return false;
+    }
+
+    if (logData.diveType === 'SCUBA' || logData.diveType === 'FREEDIVING') {
+      if (logData.approachType === undefined) {
+        alert('입수 형태를 입력해주세요');
+        return false;
+      }
+      if (logData.surfaceFlow === undefined) {
+        alert('수면 해류를 입력해주세요');
+        return false;
+      }
+      if (logData.deepFlow === undefined) {
+        alert('심층 해류를 입력해주세요');
+        return false;
+      }
+      if (logData.waterTemp === undefined) {
+        alert('수온을 입력해주세요');
+        return false;
+      }
+      if (logData.temp === undefined) {
+        alert('기온을 입력해주세요');
+        return false;
+      }
+    }
+
+    if (logData.diveType === 'SCUBA') {
+      if (logData.beforeTank === undefined) {
+        alert('입수전 잔량을 입력해주세요');
+        return false;
+      }
+      if (logData.afterTank === undefined) {
+        alert('입수후 잔량을 입력해주세요');
+        return false;
+      }
+      if (logData.diveDepth === undefined) {
+        alert('다이브 최고수심을 입력해주세요');
+        return false;
+      }
+      if (logData.pointDepth === undefined) {
+        alert('포인트 수심을 입력해주세요');
+        return false;
+      }
+      if (logData.diveTime === undefined) {
+        alert('다이브 시간을 입력해주세요');
+        return false;
+      }
+      if (logData.decompressionTime === undefined) {
+        alert('감압 시간을 입력해주세요');
+        return false;
+      }
+    }
+
+    if (logData.distanceView === undefined) {
+      alert('시야를 입력해주세요');
+      return false;
+    }
+
+    return true;
   };
 
   const createFormData = () => {
