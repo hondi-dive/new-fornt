@@ -27,11 +27,11 @@ export const fetchDiveLogsLike = async (diveLogId: string) => {
   return res;
 };
 
-export const fetchCommentList = async (divelogId: number) => {
+export const fetchCommentList = async (divelogId: string) => {
   const res: FeedCommentType[] = await axios.get(`/hondi/comment/${divelogId}`);
   return res;
 };
-export const fetchCreateComment = async (data: { divelogId: number; content: string }) => {
+export const fetchCreateComment = async (data: { divelogId: string; content: string }) => {
   const res = await axios.post(`/hondi/comment`, data);
   return res;
 };
