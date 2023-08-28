@@ -22,6 +22,7 @@ import LogDataSelector from '@/components/page/log/LogDataSelector';
 import { useRouter } from 'next/navigation';
 import { fetchCreateDiveLogs } from '@/apis/log';
 import HashTagsInput from '@/components/page/log/HashTagsInput';
+import MapPin from '@/assets/icons/mapPin.svg';
 
 const NEXT_PUBLIC_KAKAO_KEY = process.env.NEXT_PUBLIC_KAKAO_APP_KEY;
 
@@ -272,10 +273,9 @@ export default function Log() {
       {placeModal && (
         <PlacePicker showModal={placeModal} setShowModal={setPlaceModal}>
           <div className="relative flex justify-center items-center">
-            <div className="absolute z-40 mb-10">
+            <div className="absolute z-40 mb-5">
               <Spot />
             </div>
-            <div className="w-1 h-1 bg-red-600 absolute z-50" />
 
             <Script
               src={`https://dapi.kakao.com/v2/maps/sdk.js?appkey=${NEXT_PUBLIC_KAKAO_KEY}&autoload=false&libraries=services`}
@@ -283,12 +283,15 @@ export default function Log() {
             />
             <div
               ref={mapRef}
-              className="w-full h-[350px] mb-5 relative justify-center items-center"
+              className="w-[300px] h-[300px] rounded-lg relative justify-center items-center"
             />
           </div>
-          <div>{address}</div>
-          <Button size="small" onClick={handleClickPlaceAdd}>
-            <div className="text-white">확인</div>
+          <div className="flex mt-5 mb-6">
+            <MapPin />
+            <span>{address}</span>
+          </div>
+          <Button onClick={handleClickPlaceAdd}>
+            <div className="text-white">장소등록</div>
           </Button>
         </PlacePicker>
       )}
