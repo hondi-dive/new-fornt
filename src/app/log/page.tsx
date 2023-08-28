@@ -21,6 +21,7 @@ import { convertDashToKorean } from '@/utils/format';
 import LogDataSelector from '@/components/page/log/LogDataSelector';
 import { useRouter } from 'next/navigation';
 import { fetchCreateDiveLogs } from '@/apis/log';
+import HashTagsInput from '@/components/page/log/HashTagsInput';
 
 const NEXT_PUBLIC_KAKAO_KEY = process.env.NEXT_PUBLIC_KAKAO_APP_KEY;
 
@@ -36,7 +37,7 @@ export default function Log() {
     address: '',
     latitude: 33.378306, // 한라산 국립공원 위도
     longitude: 126.5424, // 한라산 국립공원 경도
-    diveAt: new Date().toISOString().substring(0, 10),
+    diveAt: new Date().toISOString(),
     diveType: 'SCUBA',
     score: 0,
     review: '',
@@ -53,7 +54,7 @@ export default function Log() {
     diveTime: undefined,
     decompressionTime: undefined,
     distanceView: undefined,
-    hashTag: undefined,
+    hashTags: [],
   });
 
   const fetchDiveLogs = async () => {
@@ -85,7 +86,7 @@ export default function Log() {
       waterTemp,
       temp,
       distanceView,
-      hashTag,
+      hashTags,
     } = logData;
 
     switch (logData.diveType) {
@@ -115,7 +116,7 @@ export default function Log() {
                 waterTemp,
                 temp,
                 distanceView,
-                hashTag,
+                hashTags,
               }),
             ],
             { type: 'application/json' },
@@ -137,7 +138,7 @@ export default function Log() {
                 review,
                 isPublic,
                 distanceView,
-                hashTag,
+                hashTags,
               }),
             ],
             { type: 'application/json' },
@@ -321,7 +322,7 @@ export default function Log() {
                 <span
                   className={`text-[17px] ${!logData.address ? 'text-[#7f7f7f]' : 'text-black'}`}
                 >
-                  {convertDashToKorean(logData.diveAt)}
+                  {convertDashToKorean(logData.diveAt.substring(0, 10))}
                 </span>
                 <div className="absolute right-7">
                   <ArrowDown />
@@ -330,7 +331,18 @@ export default function Log() {
                   ref={dateRef}
                   type="date"
                   className="absolute bottom-0 left-0 opacity-0"
-                  onChange={(e) => updateLogData('diveAt', '2023-08-27T07:09:36.640Z')}
+                  onChange={(e) => {
+                    const date = e.target.value.split('-');
+                    updateLogData(
+                      'diveAt',
+                      new Date(
+                        Number(date[0]),
+                        Number(date[1]) - 1,
+                        Number(date[2]),
+                        9,
+                      ).toISOString(),
+                    );
+                  }}
                 />
               </button>
             </StepContainer>
@@ -355,10 +367,8 @@ export default function Log() {
             </StepContainer>
 
             <StepContainer step={6} title="해시태그 등록">
-              <Input
-                placeholder="# 해시태그"
-                style={{ border: '1px solid #a5a5a5' }}
-                onChange={(e) => updateLogData('hashTag', e.target.value)}
+              <HashTagsInput
+                updateHashTags={(value: string[]) => updateLogData('hashTags', value)}
               />
             </StepContainer>
 

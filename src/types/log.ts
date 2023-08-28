@@ -9,7 +9,7 @@ export type LogData = {
   score: 0 | 1 | 2 | 3 | 4 | 5;
   review: string;
   isPublic: boolean;
-  hashTag?: string[];
+  hashTags?: string[];
   approachType?: 'BEATCH' | 'BOAT' | 'ETC';
   surfaceFlow?: 'STRONG' | 'MIDDLE' | 'WEAK';
   deepFlow?: 'STRONG' | 'MIDDLE' | 'WEAK';
