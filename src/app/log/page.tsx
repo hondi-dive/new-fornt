@@ -22,6 +22,7 @@ import LogDataSelector from '@/components/page/log/LogDataSelector';
 import { useRouter } from 'next/navigation';
 import { fetchCreateDiveLogs } from '@/apis/log';
 import HashTagsInput from '@/components/page/log/HashTagsInput';
+import MapPin from '@/assets/icons/mapPin.svg';
 
 const NEXT_PUBLIC_KAKAO_KEY = process.env.NEXT_PUBLIC_KAKAO_APP_KEY;
 
@@ -41,7 +42,7 @@ export default function Log() {
     diveType: 'SCUBA',
     score: 0,
     review: '',
-    isPublic: true,
+    isPublic: -1,
     approachType: undefined,
     surfaceFlow: undefined,
     deepFlow: undefined,
@@ -59,6 +60,7 @@ export default function Log() {
 
   const fetchDiveLogs = async () => {
     try {
+      if (!checkValidData()) return;
       const formData = createFormData();
       if (!formData) return alert('이미지를 넣어주세요');
       await fetchCreateDiveLogs(formData);
@@ -66,7 +68,77 @@ export default function Log() {
       router.replace('/feeds');
     } catch (error) {
       console.log(error);
+      alert('피드 등록에 실패 하였습니다.');
     }
+  };
+
+  const checkValidData = () => {
+    if (imageForm === undefined) {
+      alert('피드 이미지를 설정해주세요');
+      return false;
+    }
+
+    if (logData.isPublic === -1) {
+      alert('자물쇠를 눌러 공개 비공개를 설정해주세요');
+      return false;
+    }
+
+    if (logData.diveType === 'SCUBA' || logData.diveType === 'FREEDIVING') {
+      if (logData.approachType === undefined) {
+        alert('입수 형태를 입력해주세요');
+        return false;
+      }
+      if (logData.surfaceFlow === undefined) {
+        alert('수면 해류를 입력해주세요');
+        return false;
+      }
+      if (logData.deepFlow === undefined) {
+        alert('심층 해류를 입력해주세요');
+        return false;
+      }
+      if (logData.waterTemp === undefined) {
+        alert('수온을 입력해주세요');
+        return false;
+      }
+      if (logData.temp === undefined) {
+        alert('기온을 입력해주세요');
+        return false;
+      }
+    }
+
+    if (logData.diveType === 'SCUBA') {
+      if (logData.beforeTank === undefined) {
+        alert('입수전 잔량을 입력해주세요');
+        return false;
+      }
+      if (logData.afterTank === undefined) {
+        alert('입수후 잔량을 입력해주세요');
+        return false;
+      }
+      if (logData.diveDepth === undefined) {
+        alert('다이브 최고수심을 입력해주세요');
+        return false;
+      }
+      if (logData.pointDepth === undefined) {
+        alert('포인트 수심을 입력해주세요');
+        return false;
+      }
+      if (logData.diveTime === undefined) {
+        alert('다이브 시간을 입력해주세요');
+        return false;
+      }
+      if (logData.decompressionTime === undefined) {
+        alert('감압 시간을 입력해주세요');
+        return false;
+      }
+    }
+
+    if (logData.distanceView === undefined) {
+      alert('시야를 입력해주세요');
+      return false;
+    }
+
+    return true;
   };
 
   const createFormData = () => {
@@ -86,13 +158,46 @@ export default function Log() {
       temp,
       distanceView,
       hashTags,
+      beforeTank,
+      afterTank,
+      diveDepth,
+      pointDepth,
+      diveTime,
+      decompressionTime,
     } = logData;
 
     switch (logData.diveType) {
       case 'SCUBA':
         imageForm?.append(
           'contents',
-          new Blob([JSON.stringify(logData)], { type: 'application/json' }),
+          new Blob(
+            [
+              JSON.stringify({
+                address,
+                latitude,
+                longitude,
+                diveAt,
+                diveType,
+                score,
+                review,
+                isPublic: isPublic === 1 ? true : false,
+                approachType,
+                surfaceFlow,
+                deepFlow,
+                waterTemp,
+                temp,
+                distanceView,
+                hashTags,
+                beforeTank,
+                afterTank,
+                diveDepth,
+                pointDepth,
+                diveTime,
+                decompressionTime,
+              }),
+            ],
+            { type: 'application/json' },
+          ),
         );
         break;
       case 'FREEDIVING':
@@ -108,7 +213,7 @@ export default function Log() {
                 diveType,
                 score,
                 review,
-                isPublic,
+                isPublic: isPublic === 1 ? true : false,
                 approachType,
                 surfaceFlow,
                 deepFlow,
@@ -135,7 +240,7 @@ export default function Log() {
                 diveType,
                 score,
                 review,
-                isPublic,
+                isPublic: isPublic === 1 ? true : false,
                 distanceView,
                 hashTags,
               }),
@@ -272,10 +377,9 @@ export default function Log() {
       {placeModal && (
         <PlacePicker showModal={placeModal} setShowModal={setPlaceModal}>
           <div className="relative flex justify-center items-center">
-            <div className="absolute z-40 mb-10">
+            <div className="absolute z-40 mb-5">
               <Spot />
             </div>
-            <div className="w-1 h-1 bg-red-600 absolute z-50" />
 
             <Script
               src={`https://dapi.kakao.com/v2/maps/sdk.js?appkey=${NEXT_PUBLIC_KAKAO_KEY}&autoload=false&libraries=services`}
@@ -283,12 +387,15 @@ export default function Log() {
             />
             <div
               ref={mapRef}
-              className="w-full h-[350px] mb-5 relative justify-center items-center"
+              className="w-[300px] h-[300px] rounded-lg relative justify-center items-center"
             />
           </div>
-          <div>{address}</div>
-          <Button size="small" onClick={handleClickPlaceAdd}>
-            <div className="text-white">확인</div>
+          <div className="flex mt-5 mb-6">
+            <MapPin />
+            <span>{address}</span>
+          </div>
+          <Button onClick={handleClickPlaceAdd}>
+            <div className="text-white">장소등록</div>
           </Button>
         </PlacePicker>
       )}
@@ -297,6 +404,8 @@ export default function Log() {
           currProgress={pageType === 'log' ? 1 : 2}
           totalProgress={2}
           text={`경험을 담아서\n나만의 로그를 작성해볼까요?`}
+          isPublic={logData.isPublic}
+          updateLogData={updateLogData}
         />
 
         {pageType === 'log' ? (

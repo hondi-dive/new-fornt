@@ -63,6 +63,7 @@ export default function FeedComment({ diveLogId }: Props) {
         content: comment,
       });
 
+      setComment('');
       fetchGetCommentList();
     } catch (error) {
       console.log(error);
