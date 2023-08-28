@@ -63,7 +63,7 @@ export default function FeedDetailMain({
             {feedData.writer.email !== userData.email ? (
               <FeedShare feedData={feedData} />
             ) : (
-              <FeedSetting diveLogId={diveLogId} />
+              <FeedSetting diveLogId={diveLogId} feedData={feedData} />
             )}
           </>
         ) : (
