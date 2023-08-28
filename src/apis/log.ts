@@ -1,3 +1,4 @@
+import { FeedCommentType } from '@/types/feed';
 import axios from './index';
 
 export const fetchDiveLogsDetail = async (diveLogId: string) => {
@@ -27,7 +28,7 @@ export const fetchDiveLogsLike = async (diveLogId: string) => {
 };
 
 export const fetchCommentList = async (divelogId: number) => {
-  const res = await axios.get(`/hondi/comment/${divelogId}`);
+  const res: FeedCommentType[] = await axios.get(`/hondi/comment/${divelogId}`);
   return res;
 };
 export const fetchCreateComment = async (data: { divelogId: number; content: string }) => {

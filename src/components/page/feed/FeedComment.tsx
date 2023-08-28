@@ -5,6 +5,7 @@ import useWindowSize from '@/hooks/useWindowSize';
 import Comment from '@/components/page/feed/Comment';
 import { fetchCommentList, fetchUserDetail } from '@/apis/log';
 import { useEffect, useState } from 'react';
+import { FeedCommentType } from '@/types/feed';
 
 export default function FeedComment() {
   const windowSize = useWindowSize();
@@ -21,20 +22,7 @@ export default function FeedComment() {
     imageUri: '',
     email: '',
   });
-  const [commentList, setCommentList] = useState<
-    {
-      id: number;
-      user: {
-        id: number;
-        nickName: string;
-        imageUri: string;
-        email: string;
-      };
-      content: string;
-      createdAt: null | string;
-      modifiedAt: null | string;
-    }[]
-  >([]);
+  const [commentList, setCommentList] = useState<FeedCommentType[]>([]);
 
   useEffect(() => {
     request();
@@ -58,7 +46,6 @@ export default function FeedComment() {
   const fetchComment = async () => {
     try {
       const res = await fetchCommentList(3);
-      console.log(res);
       setCommentList(res);
     } catch (error) {
       console.log(error);
