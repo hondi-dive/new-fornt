@@ -8,6 +8,7 @@ import Share from '@/assets/icons/share.svg';
 import XIcon from '@/assets/icons/XIcon';
 import { fetchUserDetail } from '@/apis/log';
 import FeedSetting from '@/components/page/feed/FeedSetting';
+import FeedShare from '@/components/page/feed/FeedShare';
 
 interface Props {
   feedData: FeedDetailType;
@@ -60,9 +61,7 @@ export default function FeedDetailMain({
         page === 'feedDetail' ? (
           <>
             {feedData.writer.email !== userData.email ? (
-              <button onClick={handleShare}>
-                <Share />
-              </button>
+              <FeedShare feedData={feedData} />
             ) : (
               <FeedSetting diveLogId={diveLogId} />
             )}

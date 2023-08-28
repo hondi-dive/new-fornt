@@ -21,6 +21,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
         name="viewport"
         content="initial-scale=1.0,user0scalable=no,maximum-scale=1,width=device-width"
       />
+
       <body className={inter.className}>
         <DefaultLayout>{children}</DefaultLayout>
       </body>
