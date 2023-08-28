@@ -1,12 +1,14 @@
 export type DiveType = 'SNORKEL' | 'FREEDIVING' | 'SCUBA';
 
-export type LogData = {
+export type ScoreType = 0 | 1 | 2 | 3 | 4 | 5;
+
+export interface LogData {
   address: string;
   latitude: number;
   longitude: number;
   diveType: DiveType;
   diveAt: string;
-  score: 0 | 1 | 2 | 3 | 4 | 5;
+  score: ScoreType;
   review: string;
   isPublic: boolean;
   hashTags?: string[];
@@ -22,4 +24,16 @@ export type LogData = {
   diveTime?: number;
   decompressionTime?: number;
   distanceView?: number;
-};
+}
+
+export interface MyPageLogData {
+  divelogId: number;
+  address: string;
+  latitude: Number;
+  longitude: Number;
+  imageUri: string;
+  diveType: DiveType;
+  score: ScoreType;
+  userId: number;
+  likeCnt: number;
+}

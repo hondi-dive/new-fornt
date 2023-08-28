@@ -1,5 +1,6 @@
 import { FeedCommentType } from '@/types/feed';
 import axios from './index';
+import { MyPageLogData } from '@/types/log';
 
 export const fetchDiveLogsDetail = async (diveLogId: string) => {
   const res = await axios.get(`/hondi/divelogs/${diveLogId}`);
@@ -42,17 +43,17 @@ export const fetchCheckMyDiveLog = async (diveLogId: string) => {
 };
 
 export const fetchMyDiveLog = async () => {
-  const res = await axios.get(`/hondi/users/divelogs/my`);
+  const res: MyPageLogData[] = await axios.get(`/hondi/users/divelogs/my`);
   return res;
 };
 
 export const fetchLikeDiveLog = async () => {
-  const res = await axios.get(`/hondi/users/divelogs/like`);
+  const res: MyPageLogData[] = await axios.get(`/hondi/users/divelogs/like`);
   return res;
 };
 
 export const fetchCommentedDiveLog = async () => {
-  const res = await axios.get(`/hondi/users/divelogs/commented`);
+  const res: MyPageLogData[] = await axios.get(`/hondi/users/divelogs/commented`);
   return res;
 };
 
