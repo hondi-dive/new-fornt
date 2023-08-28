@@ -42,7 +42,7 @@ export default function Log() {
     diveType: 'SCUBA',
     score: 0,
     review: '',
-    isPublic: true,
+    isPublic: -1,
     approachType: undefined,
     surfaceFlow: undefined,
     deepFlow: undefined,
@@ -87,13 +87,46 @@ export default function Log() {
       temp,
       distanceView,
       hashTags,
+      beforeTank,
+      afterTank,
+      diveDepth,
+      pointDepth,
+      diveTime,
+      decompressionTime,
     } = logData;
 
     switch (logData.diveType) {
       case 'SCUBA':
         imageForm?.append(
           'contents',
-          new Blob([JSON.stringify(logData)], { type: 'application/json' }),
+          new Blob(
+            [
+              JSON.stringify({
+                address,
+                latitude,
+                longitude,
+                diveAt,
+                diveType,
+                score,
+                review,
+                isPublic: isPublic === 1 ? true : false,
+                approachType,
+                surfaceFlow,
+                deepFlow,
+                waterTemp,
+                temp,
+                distanceView,
+                hashTags,
+                beforeTank,
+                afterTank,
+                diveDepth,
+                pointDepth,
+                diveTime,
+                decompressionTime,
+              }),
+            ],
+            { type: 'application/json' },
+          ),
         );
         break;
       case 'FREEDIVING':
@@ -109,7 +142,7 @@ export default function Log() {
                 diveType,
                 score,
                 review,
-                isPublic,
+                isPublic: isPublic === 1 ? true : false,
                 approachType,
                 surfaceFlow,
                 deepFlow,
@@ -136,7 +169,7 @@ export default function Log() {
                 diveType,
                 score,
                 review,
-                isPublic,
+                isPublic: isPublic === 1 ? true : false,
                 distanceView,
                 hashTags,
               }),
@@ -300,6 +333,8 @@ export default function Log() {
           currProgress={pageType === 'log' ? 1 : 2}
           totalProgress={2}
           text={`경험을 담아서\n나만의 로그를 작성해볼까요?`}
+          isPublic={logData.isPublic}
+          updateLogData={updateLogData}
         />
 
         {pageType === 'log' ? (
