@@ -94,8 +94,8 @@ const KakaoMap = () => {
 
         updateMarkers(res);
       };
+      window.kakao.maps.event.addListener(map, 'dragend', handleCenterChange);
       window.kakao.maps.event.addListener(map, 'zoom_changed', handleCenterChange);
-      window.kakao.maps.event.addListener(map, 'center_changed', handleCenterChange);
 
       var imageSrc = 'https://i.postimg.cc/qMRDLNNg/spot.png',
         imageSize = new window.kakao.maps.Size(24, 24),
