@@ -106,7 +106,7 @@ export default function FeedComment({ diveLogId }: Props) {
             style={{ background: '#fff' }}
             value={comment}
             onChange={(e) => setComment(e.target.value)}
-            onKeyDown={(e) => {
+            onKeyUp={(e) => {
               if (e.key === 'Enter') {
                 fetchCreateLogComment();
               }
