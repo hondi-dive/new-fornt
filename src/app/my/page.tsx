@@ -87,12 +87,10 @@ export default function My() {
     <div className=" px-4">
       <div className="flex flex-col justify-center items-center py-9">
         <div className="relative">
-          <Image
+          <img
             alt="profile image"
             src={userData.imageUri}
-            width={100}
-            height={100}
-            className=" rounded-[50px]"
+            className=" rounded-[50px] w-[100px] h-[100px]"
           />
           <button className=" w-8 h-8 rounded-2xl flex justify-center items-center bg-[#d9d9d9] absolute bottom-0 right-0">
             <Camera />
@@ -143,7 +141,11 @@ export default function My() {
           <Tab.Panel>
             <div className="grid gap-3 grid-cols-2 mt-8">
               {myLogList.map((myLog, idx) => (
-                <Link key={idx} href={`/feed/detail/${myLog.divelogId}`}>
+                <Link
+                  key={idx}
+                  href={`/feed/detail/${myLog.divelogId}`}
+                  className=" rounded-lg overflow-hidden"
+                >
                   <Image
                     alt="feed image"
                     src={myLog.imageUri}
@@ -159,7 +161,11 @@ export default function My() {
           <Tab.Panel>
             <div className="grid gap-3 grid-cols-2 mt-8">
               {likeLogList.map((likeLog, idx) => (
-                <Link key={idx} href={`/feed/detail/${likeLog.divelogId}`}>
+                <Link
+                  key={idx}
+                  href={`/feed/detail/${likeLog.divelogId}`}
+                  className=" rounded-lg overflow-hidden"
+                >
                   <Image
                     alt="feed image"
                     src={likeLog.imageUri}
@@ -175,7 +181,11 @@ export default function My() {
           <Tab.Panel>
             <div className="grid gap-3 grid-cols-2 mt-8">
               {commentLogList.map((commentedLog, idx) => (
-                <Link key={idx} href={`/feed/detail/${commentedLog.divelogId}`}>
+                <Link
+                  key={idx}
+                  href={`/feed/detail/${commentedLog.divelogId}`}
+                  className=" rounded-lg overflow-hidden"
+                >
                   <Image
                     alt="feed image"
                     src={commentedLog.imageUri}
