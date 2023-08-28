@@ -33,3 +33,16 @@ export interface FeedDetailType {
 }
 
 export type FeedDetailPage = 'feedDetailMain' | 'feedDetailLog';
+
+export interface FeedCommentType {
+  id: number;
+  user: {
+    id: number;
+    nickName: string;
+    imageUri: string;
+    email: string;
+  };
+  content: string;
+  createdAt: null | string;
+  modifiedAt: null | string;
+}
