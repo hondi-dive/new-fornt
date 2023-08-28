@@ -1,7 +1,7 @@
 import axios from './index';
 
 interface Props {
-  address?: string;
+  address?: string | null;
   type?: string;
 }
 

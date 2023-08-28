@@ -74,7 +74,10 @@ export default function Feed() {
 
   const loadDiveLogsFeed = async () => {
     const res = await fetchDiveLogsFeed({
-      address: city?.selectedValue + region?.selectedValue,
+      address:
+        city && region
+          ? '제주특별자치도 ' + city?.selectedValue + ' ' + region?.selectedValue
+          : null,
       type: TABLIST[selectedIndex].value,
     });
     console.log(res);
