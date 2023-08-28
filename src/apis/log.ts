@@ -26,6 +26,10 @@ export const fetchDiveLogsLike = async (diveLogId: string) => {
   return res;
 };
 
+export const fetchCommentList = async (divelogId: number) => {
+  const res = await axios.get(`/hondi/comment/${divelogId}`);
+  return res;
+};
 export const fetchCreateComment = async (data: { divelogId: number; content: string }) => {
   const res = await axios.post(`/hondi/comment`, data);
   return res;
@@ -52,6 +56,8 @@ export const fetchCommentedDiveLog = async () => {
 };
 
 export const fetchUserDetail = async () => {
-  const res = await axios.get(`/hondi/users/detail`);
+  const res: { id: number; nickName: string; imageUri: string; email: string } = await axios.get(
+    `/hondi/users/detail`,
+  );
   return res;
 };
