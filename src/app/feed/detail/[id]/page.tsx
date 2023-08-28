@@ -1,6 +1,6 @@
 'use client';
 import { useEffect, useState } from 'react';
-import { fetchDiveLogsDetail } from '@/apis/log';
+import { fetchDiveLogsDetail, fetchDiveLogsLike } from '@/apis/log';
 import { FeedDetailPage, FeedDetailType } from '@/types/feed';
 import FeedDetailMain from '@/components/page/feed/FeedDetailMain';
 import FeedDetailLog from '@/components/page/feed/FeedDetailLog';
@@ -61,11 +61,24 @@ export default function FeedDetail({ params }: Props) {
     setPage(value);
   };
 
+  const toggleLike = async () => {
+    try {
+      await fetchDiveLogsLike(params.id);
+      fetchFeedData(params.id);
+    } catch (error) {
+      console.log(error);
+    }
+  };
+
   return (
     <>
       {page === 'feedDetailMain' ? (
         <div className="bg-[#567BFF] h-screen">
-          <FeedDetailMain feedData={feedData} routeFeedDetail={routeFeedDetail} />
+          <FeedDetailMain
+            feedData={feedData}
+            routeFeedDetail={routeFeedDetail}
+            toggleLike={toggleLike}
+          />
         </div>
       ) : (
         <FeedDetailLog feedData={feedData} routeFeedDetail={routeFeedDetail} />

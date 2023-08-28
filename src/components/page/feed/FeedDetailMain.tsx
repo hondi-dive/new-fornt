@@ -10,9 +10,10 @@ import XIcon from '@/assets/icons/XIcon';
 interface Props {
   feedData: FeedDetailType;
   routeFeedDetail: (value: FeedDetailPage) => void;
+  toggleLike: () => void;
 }
 
-export default function FeedDetailMain({ feedData, routeFeedDetail }: Props) {
+export default function FeedDetailMain({ feedData, routeFeedDetail, toggleLike }: Props) {
   const [page, setPage] = useState<'feedDetail' | 'comment'>('feedDetail');
 
   const handleShare = () => {
@@ -41,7 +42,11 @@ export default function FeedDetailMain({ feedData, routeFeedDetail }: Props) {
     >
       <div className="w-full">
         {page === 'feedDetail' ? (
-          <FeedDetailRead feedData={feedData} routeCommentPage={routeCommentPage} />
+          <FeedDetailRead
+            feedData={feedData}
+            routeCommentPage={routeCommentPage}
+            toggleLike={toggleLike}
+          />
         ) : (
           <FeedComment />
         )}

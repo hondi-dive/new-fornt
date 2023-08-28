@@ -3,6 +3,8 @@ import dumiImage from '@/assets/images/diving.png';
 import Input from '@/components/common/Input';
 import useWindowSize from '@/hooks/useWindowSize';
 import Comment from '@/components/page/feed/Comment';
+import { fetchCommentList, fetchUserDetail } from '@/apis/log';
+import { useEffect, useState } from 'react';
 
 export default function FeedComment() {
   const windowSize = useWindowSize();
@@ -13,6 +15,57 @@ export default function FeedComment() {
     ? windowSize.height - commentInputHeight - headerHeight - logButtonHeight
     : 500;
 
+  const [userData, setUserData] = useState({
+    id: 0,
+    nickName: '',
+    imageUri: '',
+    email: '',
+  });
+  const [commentList, setCommentList] = useState<
+    {
+      id: number;
+      user: {
+        id: number;
+        nickName: string;
+        imageUri: string;
+        email: string;
+      };
+      content: string;
+      createdAt: null | string;
+      modifiedAt: null | string;
+    }[]
+  >([]);
+
+  useEffect(() => {
+    request();
+  }, []);
+
+  const request = async () => {
+    await fetchUserData();
+    fetchComment();
+  };
+
+  const fetchUserData = async () => {
+    try {
+      const res = await fetchUserDetail();
+      setUserData(res);
+    } catch (error) {
+      console.log(error);
+      alert('요청중에 에러가 발생하였습니다.');
+    }
+  };
+
+  const fetchComment = async () => {
+    try {
+      const res = await fetchCommentList(3);
+      console.log(res);
+      setCommentList(res);
+    } catch (error) {
+      console.log(error);
+      alert('요청중에 에러가 발생하였습니다.');
+    }
+  };
+
   return (
     <div className="bg-white rounded-b-3xl overflow-hidden flex flex-col">
       <div
@@ -20,12 +73,18 @@ export default function FeedComment() {
         style={{ height: commentContainerHeight }}
       >
         <div className="min-h-[33px]" />
-        {Array.from({ length: 10 }, (_, i) => (
+        {commentList.map((comment, i) => (
           <Comment
             key={i}
-            userId="cherisher_y"
-            date="2023.08.05"
-            text="저도 오늘 다녀온 장소인데 미리 여기 올라온 정보 보고 가면 좋았을 것 같긴 합니다!"
+            isMine={comment.user.email === userData.email}
+            imgUrl={comment.user.imageUri || ''}
+            userId={comment.user.nickName}
+            date={
+              comment.modifiedAt
+                ? comment.modifiedAt.substring(0, 10).split('-').join('.')
+                : new Date().toISOString().substring(0, 10).split('-').join('.')
+            }
+            text={comment.content}
           />
         ))}
         <div className="min-h-[50px]" />

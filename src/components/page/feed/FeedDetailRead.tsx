@@ -12,9 +12,10 @@ import useWindowSize from '@/hooks/useWindowSize';
 interface Props {
   routeCommentPage: () => void;
   feedData: FeedDetailType;
+  toggleLike: () => void;
 }
 
-export default function FeedDetailRead({ routeCommentPage, feedData }: Props) {
+export default function FeedDetailRead({ routeCommentPage, feedData, toggleLike }: Props) {
   const windowSize = useWindowSize();
 
   const getDiveType = (diveType: DiveType) => {
@@ -71,10 +72,10 @@ export default function FeedDetailRead({ routeCommentPage, feedData }: Props) {
             <Tooltip size={22} isFill={true} />
             <span>{feedData.commentCnt}</span>
           </button>
-          <div className="flex items-center gap-1">
+          <button className="flex items-center gap-1" onClick={toggleLike}>
             <HandsClapping />
             <span>{feedData.likeCnt}</span>
-          </div>
+          </button>
         </div>
       </div>
     </>
