@@ -9,9 +9,9 @@ import Select from '@/components/common/Select';
 import { fetchDiveLogsFeed } from '@/apis/feed';
 
 const TABLIST = [
-  { id: 1, title: '스노쿨링', value: 'snorkel' },
-  { id: 2, title: '프리다이빙', value: 'freedive' },
-  { id: 3, title: '스쿠버다이빙', value: 'scuba' },
+  { id: 1, title: '스노쿨링', value: 'SNORKEL' },
+  { id: 2, title: '프리다이빙', value: 'FREEDIVE' },
+  { id: 3, title: '스쿠버다이빙', value: 'SCUBA' },
 ];
 const REGIONLIST = [
   { id: 1, selectedValue: '한림읍', displayValue: '한립읍' },
