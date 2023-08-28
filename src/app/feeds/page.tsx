@@ -3,6 +3,7 @@
 import React, { useState, Fragment, useEffect } from 'react';
 import { Tab } from '@headlessui/react';
 import Link from 'next/link';
+import Image from 'next/image';
 
 import CheckCircle from '@/assets/icons/CheckCircle.svg';
 import Select from '@/components/common/Select';
@@ -71,6 +72,7 @@ export default function Feed() {
   const [city, setCity] = useState<any>();
   const [region, setRegion] = useState<any>();
   const [selectedIndex, setSelectedIndex] = useState(0);
+  const [feedList, setFeedList] = useState<any>();
 
   const loadDiveLogsFeed = async () => {
     const res = await fetchDiveLogsFeed({
@@ -81,6 +83,7 @@ export default function Feed() {
       type: TABLIST[selectedIndex].value,
     });
     console.log(res);
+    setFeedList(res);
   };
 
   useEffect(() => {
@@ -147,32 +150,35 @@ export default function Feed() {
         <Tab.Panels className="mt-8">
           <Tab.Panel className="pb-24">
             <div className="grid gap-3 grid-cols-2 ">
-              {['1', '2', '3', '4', '5', '6', '8'].map((item) => (
-                <Link key={item} href={`/feed/detail/${item}`}>
-                  <div className=" bg-red-400 w-full  h-[168px] rounded-lg">{item}</div>
+              {feedList?.map((item: any) => (
+                <Link key={item.divelogId} href={`/feed/detail/${item.divelogId}`}>
+                  <div className="w-full h-[168px]  relative">
+                    <Image src={item.imageUri} alt="썸네일" fill className="rounded-lg" />
+                  </div>
                 </Link>
               ))}
-              <div></div>
             </div>
           </Tab.Panel>
           <Tab.Panel className="pb-24">
             <div className="grid gap-3 grid-cols-2 ">
-              {['1', '2', '3'].map((item) => (
-                <div key={item} className="  bg-blue-400 w-full  h-[168px] rounded-lg">
-                  {item}
-                </div>
+              {feedList?.map((item: any) => (
+                <Link key={item.divelogId} href={`/feed/detail/${item.divelogId}`}>
+                  <div className="w-full h-[168px]  relative">
+                    <Image src={item.imageUri} alt="썸네일" fill className="rounded-lg" />
+                  </div>
+                </Link>
               ))}
-              <div></div>
             </div>
           </Tab.Panel>
           <Tab.Panel className="pb-24">
             <div className="grid gap-3 grid-cols-2 ">
-              {['1', '2', '3', '4', '5'].map((item) => (
-                <div key={item} className="  bg-green-400 w-full  h-[168px] rounded-lg">
-                  {item}
-                </div>
+              {feedList?.map((item: any) => (
+                <Link key={item.divelogId} href={`/feed/detail/${item.divelogId}`}>
+                  <div className="w-full h-[168px]  relative">
+                    <Image src={item.imageUri} alt="썸네일" fill className="rounded-lg" />
+                  </div>
+                </Link>
               ))}
-              <div></div>
             </div>
           </Tab.Panel>
         </Tab.Panels>
