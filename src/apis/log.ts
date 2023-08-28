@@ -2,6 +2,10 @@ import { FeedCommentType } from '@/types/feed';
 import axios from './index';
 import { MyPageLogData } from '@/types/log';
 
+export const fetchDiveLogsDelete = async (diveLogId: string) => {
+  const res = await axios.delete(`/hondi/divelogs/${diveLogId}`);
+  return res;
+};
 export const fetchDiveLogsDetail = async (diveLogId: string) => {
   const res = await axios.get(`/hondi/divelogs/${diveLogId}`);
   return res;

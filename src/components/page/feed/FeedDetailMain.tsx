@@ -2,10 +2,13 @@ import FeedComment from '@/components/page/feed/FeedComment';
 import FeedDetailRead from '@/components/page/feed/FeedDetailRead';
 import { FeedDetailPage, FeedDetailType } from '@/types/feed';
 import ArrowCircle from '@/assets/icons/arrowCircle.svg';
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import HeaderLayout from '@/layouts/HeaderLayout';
 import Share from '@/assets/icons/share.svg';
 import XIcon from '@/assets/icons/XIcon';
+import { fetchUserDetail } from '@/apis/log';
+import FeedSetting from '@/components/page/feed/FeedSetting';
+import FeedShare from '@/components/page/feed/FeedShare';
 
 interface Props {
   feedData: FeedDetailType;
@@ -21,6 +24,26 @@ export default function FeedDetailMain({
   diveLogId,
 }: Props) {
   const [page, setPage] = useState<'feedDetail' | 'comment'>('feedDetail');
+  const [userData, setUserData] = useState({
+    id: 0,
+    nickName: '',
+    imageUri: '',
+    email: '',
+  });
+
+  useEffect(() => {
+    fetchUserData();
+  }, []);
+
+  const fetchUserData = async () => {
+    try {
+      const res = await fetchUserDetail();
+      setUserData(res);
+    } catch (error) {
+      console.log(error);
+      alert('요청중에 에러가 발생하였습니다.');
+    }
+  };
 
   const handleShare = () => {
     alert('서비스 준비중 입니다.');
@@ -36,9 +59,13 @@ export default function FeedDetailMain({
       backComponent={page === 'comment' ? <div /> : undefined}
       nextComponent={
         page === 'feedDetail' ? (
-          <button onClick={handleShare}>
-            <Share />
-          </button>
+          <>
+            {feedData.writer.email !== userData.email ? (
+              <FeedShare feedData={feedData} />
+            ) : (
+              <FeedSetting diveLogId={diveLogId} />
+            )}
+          </>
         ) : (
           <button onClick={() => setPage('feedDetail')}>
             <XIcon size={24} color="#000" />
