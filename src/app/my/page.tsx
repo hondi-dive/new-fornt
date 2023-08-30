@@ -1,32 +1,125 @@
 'use client';
 import Image from 'next/image';
-import dumiImg from '@/assets/images/diving.png';
+import emptyProfileImg from '@/assets/images/emptyProfileImg.jpeg';
 import Camera from '@/assets/icons/camera.svg';
 import Pencil from '@/assets/icons/pencilSimpleLine.svg';
 import { Tab } from '@headlessui/react';
-import { useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
+import {
+  fetchCommentedDiveLog,
+  fetchLikeDiveLog,
+  fetchMyDiveLog,
+  fetchUserDetail,
+} from '@/apis/log';
+import { MyPageLogData } from '@/types/log';
+import Link from 'next/link';
 
 export default function My() {
+  const profileImageRef = useRef<HTMLImageElement | null>(null);
+  const [userData, setUserData] = useState({
+    id: 0,
+    nickName: '',
+    imageUri: '',
+    email: '',
+  });
   const [selectedIndex, setSelectedIndex] = useState(0);
+  const [myLogList, setMyLogList] = useState<MyPageLogData[]>([]);
+  const [likeLogList, setLikeLogList] = useState<MyPageLogData[]>([]);
+  const [commentLogList, setCommentLogList] = useState<MyPageLogData[]>([]);
+  const [profileLoaded, setProfileLoaded] = useState(false);
+
+  useEffect(() => {
+    fetchUserData();
+
+    const handleImageLoad = () => {
+      setProfileLoaded(true);
+    };
+
+    if (profileImageRef.current) {
+      profileImageRef.current.onload = handleImageLoad;
+    }
+  }, []);
+
+  useEffect(() => {
+    switch (selectedIndex) {
+      case 1:
+        fetchLikeLog();
+        break;
+      case 2:
+        fetchCommentedLog();
+        break;
+      default:
+        fetchMyLog();
+    }
+  }, [selectedIndex]);
+
+  const fetchUserData = async () => {
+    try {
+      const res = await fetchUserDetail();
+      setUserData(res);
+    } catch (error) {
+      console.log(error);
+      alert('요청중에 에러가 발생하였습니다.');
+    }
+  };
+
+  const fetchMyLog = async () => {
+    try {
+      const res = await fetchMyDiveLog();
+      setMyLogList(res);
+    } catch (error) {
+      console.log(error);
+      alert('내 로그를 받아오는데 실패하였습니다.');
+    }
+  };
+
+  const fetchLikeLog = async () => {
+    try {
+      const res = await fetchLikeDiveLog();
+      setLikeLogList(res);
+    } catch (error) {
+      console.log(error);
+      alert('좋아요한 로그를 받아오는데 실패하였습니다.');
+    }
+  };
+
+  const fetchCommentedLog = async () => {
+    try {
+      const res = await fetchCommentedDiveLog();
+      setCommentLogList(res);
+    } catch (error) {
+      console.log(error);
+      alert('댓글 단 로그를 받아오는데 실패하였습니다.');
+    }
+  };
 
   return (
     <div className=" px-4">
       <div className="flex flex-col justify-center items-center py-9">
         <div className="relative">
-          <Image
-            alt="profile image"
-            src={dumiImg}
-            width={100}
-            height={100}
-            className=" rounded-[50px]"
-          />
+          {profileLoaded ? (
+            <img
+              ref={profileImageRef}
+              alt="profile image"
+              src={userData.imageUri}
+              className=" rounded-[50px] w-[100px] h-[100px]"
+            />
+          ) : (
+            <Image
+              alt="profile default image"
+              src={emptyProfileImg}
+              width={100}
+              height={100}
+              className=" rounded-full"
+            />
+          )}
           <button className=" w-8 h-8 rounded-2xl flex justify-center items-center bg-[#d9d9d9] absolute bottom-0 right-0">
             <Camera />
           </button>
         </div>
 
         <div className=" flex items-center relative mt-5">
-          <span>CHERISHHER</span>
+          <span>{userData.nickName}</span>
           <button className="absolute -right-7">
             <Pencil />
           </button>
@@ -68,24 +161,61 @@ export default function My() {
         <Tab.Panels>
           <Tab.Panel>
             <div className="grid gap-3 grid-cols-2 mt-8">
-              {Array.from({ length: 1 }, (_, i) => (
-                <div key={i} className="bg-slate-400 w-full h-[168px] rounded-lg" />
+              {myLogList.map((myLog, idx) => (
+                <Link
+                  key={idx}
+                  href={`/feed/detail/${myLog.divelogId}`}
+                  className=" rounded-lg overflow-hidden"
+                >
+                  <Image
+                    alt="feed image"
+                    src={myLog.imageUri}
+                    width={200}
+                    height={200}
+                    objectFit="cover"
+                  />
+                </Link>
               ))}
               <div className="h-40" />
             </div>
           </Tab.Panel>
           <Tab.Panel>
             <div className="grid gap-3 grid-cols-2 mt-8">
-              {Array.from({ length: 2 }, (_, i) => (
-                <div key={i} className="bg-slate-400 w-full h-[168px] rounded-lg" />
+              {likeLogList.map((likeLog, idx) => (
+                <Link
+                  key={idx}
+                  href={`/feed/detail/${likeLog.divelogId}`}
+                  className=" rounded-lg overflow-hidden"
+                >
+                  <Image
+                    alt="feed image"
+                    src={likeLog.imageUri}
+                    width={200}
+                    height={200}
+                    objectFit="cover"
+                  />
+                </Link>
               ))}
+
               <div className="h-40" />
             </div>
           </Tab.Panel>
           <Tab.Panel>
             <div className="grid gap-3 grid-cols-2 mt-8">
-              {Array.from({ length: 10 }, (_, i) => (
-                <div key={i} className="bg-slate-400 w-full h-[168px] rounded-lg" />
+              {commentLogList.map((commentedLog, idx) => (
+                <Link
+                  key={idx}
+                  href={`/feed/detail/${commentedLog.divelogId}`}
+                  className=" rounded-lg overflow-hidden"
+                >
+                  <Image
+                    alt="feed image"
+                    src={commentedLog.imageUri}
+                    width={200}
+                    height={200}
+                    objectFit="cover"
+                  />
+                </Link>
               ))}
               <div className="h-40" />
             </div>

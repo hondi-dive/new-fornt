@@ -15,10 +15,11 @@ export default function PlacePicker({
     <Transition appear show={showModal} as={Fragment}>
       <Dialog
         as="div"
-        className="fixed top-0 left-0 w-full h-screen flex justify-center items-center"
+        className="fixed top-0 left-0 w-full h-screen flex justify-center items-center z-40"
         onClose={() => setShowModal(false)}
       >
-        <div className="bg-[rgba(0,0,0,0.4)] max-w-[393px] p-6 w-full h-full flex items-center justify-center">
+        <div className="relative max-w-[393px] p-6 w-full h-full flex items-center justify-center">
+          <div className="absolute top-0 left-0 right-0 bottom-0 bg-[rgba(0,0,0,0.5)]" />
           <Transition.Child
             as={Fragment}
             enter="ease-out duration-300"
@@ -28,8 +29,10 @@ export default function PlacePicker({
             leaveFrom="opacity-100 scale-100"
             leaveTo="opacity-0 scale-95"
           >
-            <Dialog.Panel className="bg-[rgba(255,255,255,0.8)] rounded-lg p-5 w-full">
-              <Dialog.Title className="text-lg mb-5">{'장소선택'}</Dialog.Title>
+            <Dialog.Panel className="bg-white rounded-lg p-5 w-full">
+              <Dialog.Title className=" text-xl font-semibold mb-5 text-center">
+                장소등록
+              </Dialog.Title>
               {children}
             </Dialog.Panel>
           </Transition.Child>

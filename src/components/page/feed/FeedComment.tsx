@@ -1,10 +1,15 @@
-import Image from 'next/image';
-import dumiImage from '@/assets/images/diving.png';
 import Input from '@/components/common/Input';
 import useWindowSize from '@/hooks/useWindowSize';
 import Comment from '@/components/page/feed/Comment';
+import { fetchCommentList, fetchCreateComment, fetchUserDetail } from '@/apis/log';
+import { useEffect, useState } from 'react';
+import { FeedCommentType } from '@/types/feed';
 
-export default function FeedComment() {
+interface Props {
+  diveLogId: string;
+}
+
+export default function FeedComment({ diveLogId }: Props) {
   const windowSize = useWindowSize();
   const commentInputHeight = 100;
   const logButtonHeight = 71;
@@ -13,6 +18,59 @@ export default function FeedComment() {
     ? windowSize.height - commentInputHeight - headerHeight - logButtonHeight
     : 500;
 
+  const [userData, setUserData] = useState({
+    id: 0,
+    nickName: '',
+    imageUri: '',
+    email: '',
+  });
+  const [commentList, setCommentList] = useState<FeedCommentType[]>([]);
+  const [comment, setComment] = useState('');
+
+  useEffect(() => {
+    request();
+  }, []);
+
+  const request = async () => {
+    await fetchUserData();
+    fetchGetCommentList();
+  };
+
+  const fetchUserData = async () => {
+    try {
+      const res = await fetchUserDetail();
+      setUserData(res);
+    } catch (error) {
+      console.log(error);
+      alert('요청중에 에러가 발생하였습니다.');
+    }
+  };
+
+  const fetchGetCommentList = async () => {
+    try {
+      const res = await fetchCommentList(diveLogId);
+      setCommentList(res);
+    } catch (error) {
+      console.log(error);
+      alert('요청중에 에러가 발생하였습니다.');
+    }
+  };
+
+  const fetchCreateLogComment = async () => {
+    try {
+      await fetchCreateComment({
+        divelogId: diveLogId,
+        content: comment,
+      });
+
+      setComment('');
+      fetchGetCommentList();
+    } catch (error) {
+      console.log(error);
+      alert('요청중에 에러가 발생하였습니다.');
+    }
+  };
+
   return (
     <div className="bg-white rounded-b-3xl overflow-hidden flex flex-col">
       <div
@@ -20,12 +78,18 @@ export default function FeedComment() {
         style={{ height: commentContainerHeight }}
       >
         <div className="min-h-[33px]" />
-        {Array.from({ length: 10 }, (_, i) => (
+        {commentList.map((comment, i) => (
           <Comment
             key={i}
-            userId="cherisher_y"
-            date="2023.08.05"
-            text="저도 오늘 다녀온 장소인데 미리 여기 올라온 정보 보고 가면 좋았을 것 같긴 합니다!"
+            isMine={comment.user.email === userData.email}
+            imgUrl={comment.user.imageUri || ''}
+            userId={comment.user.nickName}
+            date={
+              comment.modifiedAt
+                ? comment.modifiedAt.substring(0, 10).split('-').join('.')
+                : new Date().toISOString().substring(0, 10).split('-').join('.')
+            }
+            text={comment.content}
           />
         ))}
         <div className="min-h-[50px]" />
@@ -33,11 +97,21 @@ export default function FeedComment() {
 
       <div className="w-full h-[100px] py-[25px] px-6 bg-[#e9eaf4] flex items-center">
         <div className="bg-[#d9d9d9] min-w-fit mr-[9px] w-10 h-10 rounded-full overflow-hidden">
-          <Image alt="my profile image" src={dumiImage} width={40} height={40} objectFit="cover" />
+          <img alt="my profile image" src={userData.imageUri} className="w-10 h-10 object-cover" />
         </div>
 
         <div className="w-full">
-          <Input placeholder="댓글을 입력해주세요" style={{ background: '#fff' }} />
+          <Input
+            placeholder="댓글을 입력해주세요"
+            style={{ background: '#fff' }}
+            value={comment}
+            onChange={(e) => setComment(e.target.value)}
+            onKeyUp={(e) => {
+              if (e.key === 'Enter') {
+                fetchCreateLogComment();
+              }
+            }}
+          />
         </div>
       </div>
     </div>
