@@ -4,7 +4,7 @@ import emptyProfileImg from '@/assets/images/emptyProfileImg.jpeg';
 import Camera from '@/assets/icons/camera.svg';
 import Pencil from '@/assets/icons/pencilSimpleLine.svg';
 import { Tab } from '@headlessui/react';
-import { useEffect, useRef, useState } from 'react';
+import { ChangeEvent, useEffect, useRef, useState } from 'react';
 import {
   fetchCommentedDiveLog,
   fetchLikeDiveLog,
@@ -13,8 +13,11 @@ import {
 } from '@/apis/log';
 import { MyPageLogData } from '@/types/log';
 import Link from 'next/link';
+import imageCompression from 'browser-image-compression';
+import { fetchUserImgUpload, fetchUserNicknameUpload } from '@/apis/my';
 
 export default function My() {
+  const fileInputRef = useRef<HTMLInputElement>(null);
   const profileImageRef = useRef<HTMLImageElement | null>(null);
   const [userData, setUserData] = useState({
     id: 0,
@@ -27,31 +30,30 @@ export default function My() {
   const [likeLogList, setLikeLogList] = useState<MyPageLogData[]>([]);
   const [commentLogList, setCommentLogList] = useState<MyPageLogData[]>([]);
   const [profileLoaded, setProfileLoaded] = useState(false);
+  const [image, setImage] = useState('');
+  const [isNicknameEdit, setIsNickNameEdit] = useState(false);
+  const [nickname, setNickName] = useState('');
 
-  useEffect(() => {
-    fetchUserData();
+  // useEffect(() => {
+  //   fetchUserData();
+  // }, []);
 
-    const handleImageLoad = () => {
-      setProfileLoaded(true);
-    };
+  // useEffect(() => {
+  //   switch (selectedIndex) {
+  //     case 1:
+  //       fetchLikeLog();
+  //       break;
+  //     case 2:
+  //       fetchCommentedLog();
+  //       break;
+  //     default:
+  //       fetchMyLog();
+  //   }
+  // }, [selectedIndex]);
 
-    if (profileImageRef.current) {
-      profileImageRef.current.onload = handleImageLoad;
-    }
-  }, []);
-
-  useEffect(() => {
-    switch (selectedIndex) {
-      case 1:
-        fetchLikeLog();
-        break;
-      case 2:
-        fetchCommentedLog();
-        break;
-      default:
-        fetchMyLog();
-    }
-  }, [selectedIndex]);
+  const handleImageLoad = () => {
+    setProfileLoaded(true);
+  };
 
   const fetchUserData = async () => {
     try {
@@ -93,36 +95,140 @@ export default function My() {
     }
   };
 
+  const fetchProfileImgUpload = async (imageForm: FormData) => {
+    try {
+      await fetchUserImgUpload(imageForm);
+    } catch (error) {
+      console.log(error);
+      alert('프로필이미지 업로드를 실패하였습니다.');
+      setImage('');
+    }
+  };
+
+  const fetchProfileNicknameUpload = async () => {
+    try {
+      await fetchUserNicknameUpload(nickname);
+      setIsNickNameEdit(false);
+      setNickName('');
+    } catch (error) {
+      console.log(error);
+      alert('프로필 닉네임 업로드를 실패하였습니다.');
+    }
+  };
+
+  const handleClick = () => {
+    fileInputRef.current ? fileInputRef.current.click() : console.log('fileInput not created');
+  };
+
+  const handleUpload = async (e: ChangeEvent<HTMLInputElement>) => {
+    const fileList: null | FileList = e.target.files;
+    if (!fileList || !fileList[0]) return;
+
+    const file = fileList[0];
+
+    const compressedFile = await compressionImage(file);
+    const reader = new FileReader();
+    reader.readAsDataURL(compressedFile);
+    reader.onload = (e) => {
+      if (reader.readyState === 2) {
+        setImage(e?.target?.result ? `${e.target.result}` : '');
+      }
+    };
+
+    const formData = new FormData();
+    formData.append('imageFile', compressedFile);
+    fetchProfileImgUpload(formData);
+  };
+
+  const compressionImage = async (file: File) => {
+    const options = {
+      maxSizeMB: 5,
+      maxWidthOrHeight: 1920, // 최대 넓이(혹은 높이)
+      useWebWorker: true,
+    };
+
+    const compressedFile = await imageCompression(file, options);
+
+    return compressedFile;
+  };
+
   return (
     <div className=" px-4">
       <div className="flex flex-col justify-center items-center py-9">
         <div className="relative">
-          {profileLoaded ? (
-            <img
-              ref={profileImageRef}
-              alt="profile image"
-              src={userData.imageUri}
-              className=" rounded-[50px] w-[100px] h-[100px]"
-            />
-          ) : (
+          {image ? (
             <Image
-              alt="profile default image"
-              src={emptyProfileImg}
+              alt="upload image"
+              src={image}
               width={100}
               height={100}
+              objectFit="cover"
               className=" rounded-full"
             />
+          ) : (
+            <>
+              {profileLoaded ? (
+                <img
+                  ref={profileImageRef}
+                  alt="profile image"
+                  src={userData.imageUri}
+                  className=" rounded-[50px] w-[100px] h-[100px]"
+                />
+              ) : (
+                <Image
+                  alt="profile default image"
+                  src={emptyProfileImg}
+                  width={100}
+                  height={100}
+                  className=" rounded-full"
+                />
+              )}
+            </>
           )}
-          <button className=" w-8 h-8 rounded-2xl flex justify-center items-center bg-[#d9d9d9] absolute bottom-0 right-0">
+
+          <img
+            alt="profile image"
+            src={userData.imageUri}
+            onLoad={handleImageLoad}
+            className="hidden"
+          />
+
+          <input
+            type="file"
+            name="image_url"
+            onChange={handleUpload}
+            ref={fileInputRef}
+            className="hidden"
+          />
+
+          <button
+            className=" w-8 h-8 rounded-2xl flex justify-center items-center bg-[#d9d9d9] absolute bottom-0 right-0"
+            onClick={handleClick}
+          >
             <Camera />
           </button>
         </div>
 
         <div className=" flex items-center relative mt-5">
-          <span>{userData.nickName}</span>
-          <button className="absolute -right-7">
-            <Pencil />
-          </button>
+          {isNicknameEdit ? (
+            <div className="flex justify-center items-center">
+              <input
+                className="outline-none border-solid border-[2px] border-[#d9d9d9] w-24 py-1 px-2 rounded-md"
+                value={nickname}
+                onChange={(e) => setNickName(e.target.value)}
+              />
+              <button className="absolute -right-7" onClick={fetchProfileNicknameUpload}>
+                <Pencil />
+              </button>
+            </div>
+          ) : (
+            <>
+              <span>{userData.nickName}</span>
+              <button className="absolute -right-7" onClick={() => setIsNickNameEdit(true)}>
+                <Pencil />
+              </button>
+            </>
+          )}
         </div>
       </div>
 
