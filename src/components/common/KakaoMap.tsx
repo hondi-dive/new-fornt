@@ -5,11 +5,10 @@ import { useRouter } from 'next/navigation';
 
 import Script from 'next/script';
 import Head from 'next/head';
-
 import { pixelsToMeters } from '@/utils/meter';
 import { KakaoInfoWindow, KakaoLatLng, KakaoMap, KakaoMarker } from '@/types/kakao';
 import { fetchMap } from '@/apis/map';
-
+import SearchInput from '@/components/common/SearchInput';
 declare global {
   interface Window {
     kakao: {
@@ -35,8 +34,10 @@ declare global {
 const NEXT_PUBLIC_KAKAO_KEY = process.env.NEXT_PUBLIC_KAKAO_APP_KEY;
 
 const KakaoMap = () => {
+  const inputRef = useRef<HTMLInputElement>(null);
   const router = useRouter();
   const containerRef = useRef<HTMLDivElement>(null);
+  const [text, setText] = useState<any>('');
 
   const initMap = useCallback(async () => {
     if (containerRef.current) {
@@ -77,6 +78,7 @@ const KakaoMap = () => {
           center.getLat(),
           center.getLng(),
           pixelsToMeters(zoomLevel, containerRef.current?.offsetHeight) ?? 500000,
+          text,
         );
 
         updateMarkers(res);
@@ -89,6 +91,7 @@ const KakaoMap = () => {
           center.getLat(),
           center.getLng(),
           pixelsToMeters(zoomLevel, containerRef.current?.offsetHeight) ?? 500000,
+          text,
         );
 
         updateMarkers(res);
@@ -99,13 +102,18 @@ const KakaoMap = () => {
       window.kakao.maps.event.addListener(map, 'dragend', handleCenterChange);
       window.kakao.maps.event.addListener(map, 'zoom_changed', handleCenterChange);
     }
-  }, []);
+  }, [text]);
 
   useEffect(() => {
     if (window?.kakao) {
       initMap();
     }
   }, [initMap]);
+
+  const onSearch = async (e: React.FormEvent<HTMLFormElement>) => {
+    e.preventDefault();
+    setText(inputRef.current?.value);
+  };
 
   return (
     <div className="relative">
@@ -117,6 +125,16 @@ const KakaoMap = () => {
         <link rel="preconnect" href="https://dapi.kakao.com" />
         <link rel="dns-prefetch" href="https://dapi.kakao.com" />
       </Head>
+      <div
+        className="absolute top-[64px] z-10 left-[50%] w-[calc(100%-24px)]"
+        style={{
+          transform: 'translate(-50%, -50%)',
+        }}
+      >
+        <form onSubmit={(e) => onSearch(e)}>
+          <SearchInput placeholder="원하는 바다를 검색해주세요" ref={inputRef} setText={setText} />
+        </form>
+      </div>
       <div id="map" ref={containerRef} className="h-screen w-full" />
     </div>
   );

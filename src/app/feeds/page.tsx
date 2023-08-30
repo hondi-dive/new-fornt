@@ -102,7 +102,7 @@ export default function Feed() {
           : null,
       type: createData(),
     });
-    console.log(res);
+
     setFeedList(res);
   };
 

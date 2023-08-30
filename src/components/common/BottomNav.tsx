@@ -14,7 +14,6 @@ import path from 'path';
 
 export default function BottomNav() {
   const pathname = usePathname();
-  console.log(pathname);
 
   return (
     <div className="w-full h-20 px-11 flex bg-white justify-between py-3  bottom-0 z-10 fixed max-w-[393px]">
