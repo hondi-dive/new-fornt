@@ -12,5 +12,14 @@
       -ms-overflow-style: none;
       scrollbar-width: none;
     }
+
+    .no-spin-button::-webkit-outer-spin-button,
+    .no-spin-button::-webkit-inner-spin-button {
+      -webkit-appearance: none;
+      margin: 0;
+    }
+    .no-spin-button[type='number'] {
+      -moz-appearance: textfield;
+    }
   }
 }
