@@ -1,7 +1,6 @@
 'use client';
 
-import React, { useState, Fragment, useEffect } from 'react';
-import { Tab } from '@headlessui/react';
+import React, { useState, useEffect } from 'react';
 import Link from 'next/link';
 import Image from 'next/image';
 
@@ -9,11 +8,6 @@ import CheckCircle from '@/assets/icons/CheckCircle.svg';
 import Select from '@/components/common/Select';
 import { fetchDiveLogsFeed } from '@/apis/feed';
 
-const TABLIST = [
-  { id: 1, title: '스노쿨링', value: 'SNORKEL' },
-  { id: 2, title: '프리다이빙', value: 'FREEDIVE' },
-  { id: 3, title: '스쿠버다이빙', value: 'SCUBA' },
-];
 const REGIONLIST = [
   { id: 1, selectedValue: '한림읍', displayValue: '한립읍' },
   { id: 2, selectedValue: '애월읍', displayValue: '애월읍' },
@@ -71,8 +65,34 @@ const CITYLIST = [
 export default function Feed() {
   const [city, setCity] = useState<any>();
   const [region, setRegion] = useState<any>();
-  const [selectedIndex, setSelectedIndex] = useState(0);
+  const [snorkelActive, setSnorkelActive] = useState(false);
+  const [freedivingActive, setFreedivingActive] = useState(false);
+  const [scubaActive, setScubaActive] = useState(false);
   const [feedList, setFeedList] = useState<any>();
+
+  const createData = () => {
+    let data = '';
+
+    if (
+      (snorkelActive && freedivingActive && scubaActive) ||
+      (!snorkelActive && !freedivingActive && !scubaActive)
+    ) {
+      data = 'SNORKEL,FREEDIVING,SCUBA';
+    } else {
+      if (snorkelActive) {
+        data += 'SNORKEL,';
+      }
+      if (freedivingActive) {
+        data += 'FREEDIVING,';
+      }
+      if (scubaActive) {
+        data += 'SCUBA,';
+      }
+      // 마지막 쉼표 제거
+      data = data.slice(0, -1);
+    }
+    return data;
+  };
 
   const loadDiveLogsFeed = async () => {
     const res = await fetchDiveLogsFeed({
@@ -80,7 +100,7 @@ export default function Feed() {
         city && region
           ? '제주특별자치도 ' + city?.selectedValue + ' ' + region?.selectedValue
           : null,
-      type: TABLIST[selectedIndex].value,
+      type: createData(),
     });
     console.log(res);
     setFeedList(res);
@@ -88,7 +108,7 @@ export default function Feed() {
 
   useEffect(() => {
     loadDiveLogsFeed();
-  }, [selectedIndex, city, region]);
+  }, [snorkelActive, freedivingActive, scubaActive, city, region]);
 
   useEffect(() => {
     setRegion(null);
@@ -101,8 +121,9 @@ export default function Feed() {
   const headlerRegion = (value: any) => {
     setRegion(value);
   };
-  console.log(city?.selectedValue);
+
   const data = city?.selectedValue === '서귀포시' ? dsa2 : REGIONLIST;
+
   return (
     <>
       <div className="w-full h-8" />
@@ -126,63 +147,61 @@ export default function Feed() {
           }}
         />
       </div>
-
       <div className="w-full h-8" />
-      <Tab.Group selectedIndex={selectedIndex} onChange={setSelectedIndex}>
-        <Tab.List className="bg-[#E9EAF4] flex justify-between rounded-3xl py-2 px-2">
-          {TABLIST.map((tab) => (
-            <Tab as={Fragment} key={tab.id}>
-              {({ selected }) => (
-                <button
-                  className={`${
-                    selected
-                      ? 'bg-[#567BFF] text-white border-2 border-solid border-[#567BFF]'
-                      : 'border-[#92AAFD] border-2 border-solid bg-white text-[#7F7F7F]'
-                  } text-base outline-none flex items-center rounded-3xl py-1.5 px-2`}
-                >
-                  {tab.title}
-                  <CheckCircle color={selected ? 'white' : '#7F7F7F'} />
-                </button>
-              )}
-            </Tab>
-          ))}
-        </Tab.List>
-        <Tab.Panels className="mt-8">
-          <Tab.Panel className="pb-24">
-            <div className="grid gap-3 grid-cols-2 ">
-              {feedList?.map((item: any) => (
-                <Link key={item.divelogId} href={`/feed/detail/${item.divelogId}`}>
-                  <div className="w-full h-[168px]  relative">
-                    <Image src={item.imageUri} alt="썸네일" fill className="rounded-lg" />
-                  </div>
-                </Link>
-              ))}
-            </div>
-          </Tab.Panel>
-          <Tab.Panel className="pb-24">
-            <div className="grid gap-3 grid-cols-2 ">
-              {feedList?.map((item: any) => (
-                <Link key={item.divelogId} href={`/feed/detail/${item.divelogId}`}>
-                  <div className="w-full h-[168px]  relative">
-                    <Image src={item.imageUri} alt="썸네일" fill className="rounded-lg" />
-                  </div>
-                </Link>
-              ))}
-            </div>
-          </Tab.Panel>
-          <Tab.Panel className="pb-24">
-            <div className="grid gap-3 grid-cols-2 ">
-              {feedList?.map((item: any) => (
-                <Link key={item.divelogId} href={`/feed/detail/${item.divelogId}`}>
-                  <div className="w-full h-[168px]  relative">
-                    <Image src={item.imageUri} alt="썸네일" fill className="rounded-lg" />
-                  </div>
-                </Link>
-              ))}
-            </div>
-          </Tab.Panel>
-        </Tab.Panels>
-      </Tab.Group>
+      <div className="bg-[#E9EAF4] flex justify-between rounded-3xl py-2 px-2">
+        <button
+          onClick={() => {
+            setSnorkelActive(!snorkelActive);
+          }}
+          className={`${
+            snorkelActive
+              ? 'bg-[#567BFF] text-white border-2 border-solid border-[#567BFF]'
+              : 'border-[#92AAFD] border-2 border-solid bg-white text-[#7F7F7F]'
+          } text-base outline-none flex items-center rounded-3xl py-1.5 px-5`}
+        >
+          스노클
+          <CheckCircle color={snorkelActive ? 'white' : '#7F7F7F'} />
+        </button>
+        <button
+          onClick={() => {
+            setFreedivingActive(!freedivingActive);
+          }}
+          className={`${
+            freedivingActive
+              ? 'bg-[#567BFF] text-white border-2 border-solid border-[#567BFF]'
+              : 'border-[#92AAFD] border-2 border-solid bg-white text-[#7F7F7F]'
+          } text-base outline-none flex items-center rounded-3xl py-1.5 px-3`}
+        >
+          프리다이빙
+          <CheckCircle color={freedivingActive ? 'white' : '#7F7F7F'} />
+        </button>
+        <button
+          onClick={() => {
+            setScubaActive(!scubaActive);
+          }}
+          className={`${
+            scubaActive
+              ? 'bg-[#567BFF] text-white border-2 border-solid border-[#567BFF]'
+              : 'border-[#92AAFD] border-2 border-solid bg-white text-[#7F7F7F]'
+          } text-base outline-none flex items-center rounded-3xl py-1.5 px-2`}
+        >
+          스쿠버다이빙
+          <CheckCircle color={scubaActive ? 'white' : '#7F7F7F'} />
+        </button>
+      </div>
+      <div className="mt-8">
+        <div className="pb-24">
+          <div className="grid gap-3 grid-cols-2 ">
+            {feedList?.map((item: any) => (
+              <Link key={item.divelogId} href={`/feed/detail/${item.divelogId}`}>
+                <div className="w-full h-[168px]  relative">
+                  <Image src={item.imageUri} alt="썸네일" fill className="rounded-lg" />
+                </div>
+              </Link>
+            ))}
+          </div>
+        </div>
+      </div>
     </>
   );
 }
