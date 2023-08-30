@@ -352,7 +352,10 @@ export default function Log() {
         pageType === 'log' ? (
           <button
             disabled={!logData.address}
-            onClick={() => setPageType('logDetail')}
+            onClick={() => {
+              if (!imageForm) return alert('피드 이미지를 설정해주세요');
+              setPageType('logDetail');
+            }}
             className="text-[#426BFF] text-lg font-semibold disabled:text-[#d9d9d9]"
           >
             다음
@@ -568,7 +571,7 @@ export default function Log() {
                       _size="small"
                       type="number"
                       unit={'℃'}
-                      value={logData.waterTemp}
+                      value={logData.waterTemp?.toString()}
                       onChange={(e) => updateLogData('waterTemp', Number(e.target.value))}
                     />
                   </SubTitleContainer>
@@ -577,7 +580,7 @@ export default function Log() {
                       _size="small"
                       type="number"
                       unit={'℃'}
-                      value={logData.temp}
+                      value={logData.temp?.toString()}
                       onChange={(e) => updateLogData('temp', Number(e.target.value))}
                     />
                   </SubTitleContainer>
@@ -592,7 +595,7 @@ export default function Log() {
                         _size="small"
                         unit={'bar'}
                         type="number"
-                        value={logData.beforeTank}
+                        value={logData.beforeTank?.toString()}
                         onChange={(e) => updateLogData('beforeTank', Number(e.target.value))}
                       />
                     </SubTitleContainer>
@@ -601,7 +604,7 @@ export default function Log() {
                         _size="small"
                         unit={'bar'}
                         type="number"
-                        value={logData.afterTank}
+                        value={logData.afterTank?.toString()}
                         onChange={(e) => updateLogData('afterTank', Number(e.target.value))}
                       />
                     </SubTitleContainer>
@@ -613,7 +616,7 @@ export default function Log() {
                         _size="small"
                         unit={'m'}
                         type="number"
-                        value={logData.diveDepth}
+                        value={logData.diveDepth?.toString()}
                         onChange={(e) => updateLogData('diveDepth', Number(e.target.value))}
                       />
                     </SubTitleContainer>
@@ -622,7 +625,7 @@ export default function Log() {
                         _size="small"
                         unit={'m'}
                         type="number"
-                        value={logData.pointDepth}
+                        value={logData.pointDepth?.toString()}
                         onChange={(e) => updateLogData('pointDepth', Number(e.target.value))}
                       />
                     </SubTitleContainer>
@@ -634,7 +637,7 @@ export default function Log() {
                         _size="small"
                         unit={'분'}
                         type="number"
-                        value={logData.diveTime}
+                        value={logData.diveTime?.toString()}
                         onChange={(e) => updateLogData('diveTime', Number(e.target.value))}
                       />
                     </SubTitleContainer>
@@ -643,7 +646,7 @@ export default function Log() {
                         _size="small"
                         unit={'분'}
                         type="number"
-                        value={logData.decompressionTime}
+                        value={logData.decompressionTime?.toString()}
                         onChange={(e) => updateLogData('decompressionTime', Number(e.target.value))}
                       />
                     </SubTitleContainer>
@@ -658,7 +661,7 @@ export default function Log() {
                       _size="small"
                       unit={'m'}
                       type="number"
-                      value={logData.distanceView}
+                      value={logData.distanceView?.toString()}
                       onChange={(e) => updateLogData('distanceView', Number(e.target.value))}
                     />
                   </SubTitleContainer>
