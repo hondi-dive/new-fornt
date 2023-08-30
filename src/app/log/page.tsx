@@ -352,7 +352,10 @@ export default function Log() {
         pageType === 'log' ? (
           <button
             disabled={!logData.address}
-            onClick={() => setPageType('logDetail')}
+            onClick={() => {
+              if (!imageForm) return alert('피드 이미지를 설정해주세요');
+              setPageType('logDetail');
+            }}
             className="text-[#426BFF] text-lg font-semibold disabled:text-[#d9d9d9]"
           >
             다음
