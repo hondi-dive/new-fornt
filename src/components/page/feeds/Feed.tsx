@@ -1,7 +1,13 @@
 import Link from 'next/link';
 import Image from 'next/image';
 
-export default function Feed({ feed }: any) {
+import { IFeed } from '@/types/feed';
+
+interface FeedProps {
+  feed: IFeed;
+}
+
+export default function Feed({ feed }: FeedProps) {
   return (
     <Link href={`/feed/detail/${feed.divelogId}`}>
       <div className="w-full h-[168px]  relative">

@@ -10,11 +10,11 @@ type SelectData = {
 
 interface Props {
   data: SelectData[];
-  value: SelectData;
+  value: SelectData | undefined;
   onChange: (value: SelectData) => void;
   disabled?: boolean;
   placeholder?: string;
-  action?: any;
+  action?: (e: any) => void;
 }
 
 export default function Select({ data, value, onChange, disabled, placeholder, action }: Props) {

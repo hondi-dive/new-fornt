@@ -4,7 +4,7 @@ export const fetchMap = async (
   latitude: number,
   longitude: number,
   sideLength: number,
-  search: any,
+  search: string | null,
 ) => {
   const res = await axios.get(
     `/hondi/divelogs/map?latitude=${latitude}&longitude=${longitude}&sideLength=${sideLength}&q=${search}`,

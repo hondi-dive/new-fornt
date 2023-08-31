@@ -1,5 +1,17 @@
 import { DiveType } from '@/types/log';
 
+export interface IFeed {
+  address: string;
+  diveType: string;
+  divelogId: number;
+  imageUri: string;
+  latitude: number;
+  likeCnt: number;
+  longitude: number;
+  score: number;
+  userId: number;
+}
+
 export interface FeedDetailType {
   writer: {
     id: number;
