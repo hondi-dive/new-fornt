@@ -270,7 +270,7 @@ export default function My() {
         </Tab.List>
         <Tab.Panels>
           <Tab.Panel>
-            <div className="grid gap-3 grid-cols-2 mt-8">
+            <div className="grid gap-3 grid-cols-2 mt-8 mb-40">
               {myLogList.map((myLog, idx) => (
                 <Link
                   key={idx}
@@ -286,11 +286,10 @@ export default function My() {
                   />
                 </Link>
               ))}
-              <div className="h-40" />
             </div>
           </Tab.Panel>
           <Tab.Panel>
-            <div className="grid gap-3 grid-cols-2 mt-8">
+            <div className="grid gap-3 grid-cols-2 mt-8 mb-40">
               {likeLogList.map((likeLog, idx) => (
                 <Link
                   key={idx}
@@ -306,12 +305,10 @@ export default function My() {
                   />
                 </Link>
               ))}
-
-              <div className="h-40" />
             </div>
           </Tab.Panel>
           <Tab.Panel>
-            <div className="grid gap-3 grid-cols-2 mt-8">
+            <div className="grid gap-3 grid-cols-2 mt-8 mb-40">
               {commentLogList.map((commentedLog, idx) => (
                 <Link
                   key={idx}
@@ -327,7 +324,6 @@ export default function My() {
                   />
                 </Link>
               ))}
-              <div className="h-40" />
             </div>
           </Tab.Panel>
         </Tab.Panels>
