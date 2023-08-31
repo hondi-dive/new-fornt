@@ -104,7 +104,7 @@ export default function Feed() {
       />
       <div className="mt-8">
         <div className="pb-24">
-          <div className="grid gap-3 grid-cols-2 mb-40">
+          <div className="grid gap-3 grid-cols-2 pb-40">
             <FeedList feedList={feedList} />
           </div>
         </div>
