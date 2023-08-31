@@ -132,7 +132,7 @@ const KakaoMap = () => {
         }}
       >
         <form onSubmit={(e) => onSearch(e)}>
-          <SearchInput placeholder="원하는 바다를 검색해주세요" ref={inputRef} setText={setText} />
+          <SearchInput placeholder="원하는 바다를 검색해주세요" ref={inputRef} />
         </form>
       </div>
       <div id="map" ref={containerRef} className="h-screen w-full" />
