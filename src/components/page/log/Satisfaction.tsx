@@ -36,13 +36,13 @@ export default function Satisfaction({ size = 'medium', value, onChange }: Props
       {Array.from({ length: 5 }, (_, i) => {
         if (satisfaction >= i + 1) {
           return (
-            <button key={i} onClick={!value ? () => handleClick(i + 1) : undefined}>
+            <button key={i} onClick={value === undefined ? () => handleClick(i + 1) : undefined}>
               <Heart isFill={true} size={size === 'medium' ? 33 : 20} />
             </button>
           );
         } else {
           return (
-            <button key={i} onClick={!value ? () => handleClick(i + 1) : undefined}>
+            <button key={i} onClick={value === undefined ? () => handleClick(i + 1) : undefined}>
               <Heart size={size === 'medium' ? 33 : 20} />
             </button>
           );
