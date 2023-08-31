@@ -34,22 +34,22 @@ export default function My() {
   const [isNicknameEdit, setIsNickNameEdit] = useState(false);
   const [nickname, setNickName] = useState('');
 
-  // useEffect(() => {
-  //   fetchUserData();
-  // }, []);
+  useEffect(() => {
+    fetchUserData();
+  }, []);
 
-  // useEffect(() => {
-  //   switch (selectedIndex) {
-  //     case 1:
-  //       fetchLikeLog();
-  //       break;
-  //     case 2:
-  //       fetchCommentedLog();
-  //       break;
-  //     default:
-  //       fetchMyLog();
-  //   }
-  // }, [selectedIndex]);
+  useEffect(() => {
+    switch (selectedIndex) {
+      case 1:
+        fetchLikeLog();
+        break;
+      case 2:
+        fetchCommentedLog();
+        break;
+      default:
+        fetchMyLog();
+    }
+  }, [selectedIndex]);
 
   const handleImageLoad = () => {
     setProfileLoaded(true);
@@ -163,7 +163,7 @@ export default function My() {
               width={100}
               height={100}
               objectFit="cover"
-              className=" rounded-full"
+              className=" rounded-[50px]"
             />
           ) : (
             <>
@@ -172,7 +172,7 @@ export default function My() {
                   ref={profileImageRef}
                   alt="profile image"
                   src={userData.imageUri}
-                  className=" rounded-[50px] w-[100px] h-[100px]"
+                  className=" rounded-[50px] w-[100px] h-[100px] object-cover"
                 />
               ) : (
                 <Image
@@ -180,7 +180,8 @@ export default function My() {
                   src={emptyProfileImg}
                   width={100}
                   height={100}
-                  className=" rounded-full"
+                  className=" rounded-[50px]"
+                  objectFit="cover"
                 />
               )}
             </>
