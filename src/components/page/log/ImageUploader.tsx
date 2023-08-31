@@ -2,6 +2,7 @@
 import XIcon from '@/assets/icons/XIcon';
 import Plus from '@/assets/icons/plus.svg';
 import useWindowSize from '@/hooks/useWindowSize';
+import imageCompression from 'browser-image-compression';
 import Image from 'next/image';
 import { ChangeEvent, useRef, useState } from 'react';
 
@@ -33,8 +34,10 @@ export default function ImageUploader({ setImageForm }: Props) {
     if (!fileList || !fileList[0]) return;
 
     const file = fileList[0];
+
+    const compressedFile = await compressionImage(file);
     const reader = new FileReader();
-    reader.readAsDataURL(file);
+    reader.readAsDataURL(compressedFile);
     reader.onload = (e) => {
       if (reader.readyState === 2) {
         setImage(e?.target?.result ? `${e.target.result}` : '');
@@ -42,8 +45,20 @@ export default function ImageUploader({ setImageForm }: Props) {
     };
 
     const formData = new FormData();
-    formData.append('imageFile', file);
+    formData.append('imageFile', compressedFile);
     setImageForm(formData);
+  };
+
+  const compressionImage = async (file: File) => {
+    const options = {
+      maxSizeMB: 5,
+      maxWidthOrHeight: 1920, // 최대 넓이(혹은 높이)
+      useWebWorker: true,
+    };
+
+    const compressedFile = await imageCompression(file, options);
+
+    return compressedFile;
   };
 
   return (
