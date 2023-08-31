@@ -17,3 +17,8 @@ export const fetchDiveLogsFeed = async ({ address, type }: Props) => {
     return res;
   }
 };
+
+export const fetchDiveLogsIsLiked = async (diveLogId: string) => {
+  const res: boolean = await axios.get(`/hondi/divelogs/${diveLogId}/is_liked`);
+  return res;
+};
