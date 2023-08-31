@@ -12,7 +12,7 @@ export default function Input({ _size = 'medium', ...rest }: Props) {
 
   return (
     <input
-      className={`w-full outline-none text-sm px-[18px] rounded-lg bg-transparent ${INPUT_SIZE[_size]} no-spin-button`}
+      className={`w-full outline-none px-[18px] rounded-lg bg-transparent ${INPUT_SIZE[_size]} no-spin-button`}
       {...rest}
     />
   );
