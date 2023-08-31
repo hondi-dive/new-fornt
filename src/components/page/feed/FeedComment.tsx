@@ -4,6 +4,7 @@ import Comment from '@/components/page/feed/Comment';
 import { fetchCommentList, fetchCreateComment, fetchUserDetail } from '@/apis/log';
 import { useEffect, useState } from 'react';
 import { FeedCommentType } from '@/types/feed';
+import Button from '@/components/common/Button';
 
 interface Props {
   diveLogId: string;
@@ -112,6 +113,12 @@ export default function FeedComment({ diveLogId }: Props) {
               }
             }}
           />
+        </div>
+
+        <div className=" w-32 ml-2">
+          <Button size="small" onClick={fetchCreateLogComment}>
+            <span className="text-white">댓글쓰기</span>
+          </Button>
         </div>
       </div>
     </div>
