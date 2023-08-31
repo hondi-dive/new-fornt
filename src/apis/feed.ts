@@ -6,6 +6,11 @@ interface Props {
 }
 
 export const fetchDiveLogsFeed = async ({ address, type }: Props) => {
-  const res = await axios.get(`/hondi/divelogs/feeds?address=${address}&type=${type}`);
-  return res;
+  if (address) {
+    const res = await axios.get(`/hondi/divelogs/feeds?address=${address}&type=${type}`);
+    return res;
+  } else {
+    const res = await axios.get(`/hondi/divelogs/feeds?type=${type}`);
+    return res;
+  }
 };
