@@ -98,6 +98,8 @@ export default function My() {
   const fetchProfileImgUpload = async (imageForm: FormData) => {
     try {
       await fetchUserImgUpload(imageForm);
+      fetchUserData();
+      setImage('');
     } catch (error) {
       console.log(error);
       alert('프로필이미지 업로드를 실패하였습니다.');
@@ -110,6 +112,7 @@ export default function My() {
       await fetchUserNicknameUpload(nickname);
       setIsNickNameEdit(false);
       setNickName('');
+      fetchUserData();
     } catch (error) {
       console.log(error);
       alert('프로필 닉네임 업로드를 실패하였습니다.');

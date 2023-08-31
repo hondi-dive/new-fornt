@@ -4,7 +4,6 @@ import { FeedDetailPage, FeedDetailType } from '@/types/feed';
 import ArrowCircle from '@/assets/icons/arrowCircle.svg';
 import { useEffect, useState } from 'react';
 import HeaderLayout from '@/layouts/HeaderLayout';
-import Share from '@/assets/icons/share.svg';
 import XIcon from '@/assets/icons/XIcon';
 import { fetchUserDetail } from '@/apis/log';
 import FeedSetting from '@/components/page/feed/FeedSetting';
@@ -13,7 +12,6 @@ import FeedShare from '@/components/page/feed/FeedShare';
 interface Props {
   feedData: FeedDetailType;
   routeFeedDetail: (value: FeedDetailPage) => void;
-  toggleLike: () => void;
   diveLogId: string;
   fetchFeedData: (id: string) => void;
 }
@@ -21,7 +19,6 @@ interface Props {
 export default function FeedDetailMain({
   feedData,
   routeFeedDetail,
-  toggleLike,
   diveLogId,
   fetchFeedData,
 }: Props) {
@@ -45,10 +42,6 @@ export default function FeedDetailMain({
       console.log(error);
       alert('요청중에 에러가 발생하였습니다.');
     }
-  };
-
-  const handleShare = () => {
-    alert('서비스 준비중 입니다.');
   };
 
   const routeCommentPage = () => {
@@ -80,7 +73,6 @@ export default function FeedDetailMain({
           <FeedDetailRead
             feedData={feedData}
             routeCommentPage={routeCommentPage}
-            toggleLike={toggleLike}
             diveLogId={diveLogId}
             fetchFeedData={fetchFeedData}
           />

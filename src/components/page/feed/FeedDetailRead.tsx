@@ -1,6 +1,7 @@
 'use client';
 import Image from 'next/image';
 import HandsClapping from '@/assets/icons/handsClapping.svg';
+import HandsClappingOff from '@/assets/icons/handsClappingOff.svg';
 import HashTag from '@/components/page/feed/HashTag';
 import Tooltip from '@/assets/icons/Tooltip';
 import IdBadge from '@/components/page/feed/IdBadge';
@@ -8,12 +9,13 @@ import Satisfaction from '@/components/page/log/Satisfaction';
 import { FeedDetailType } from '@/types/feed';
 import { DiveType } from '@/types/log';
 import useWindowSize from '@/hooks/useWindowSize';
-import { useEffect } from 'react';
+import { useEffect, useState } from 'react';
+import { fetchDiveLogsIsLiked } from '@/apis/feed';
+import { fetchDiveLogsLike } from '@/apis/log';
 
 interface Props {
   routeCommentPage: () => void;
   feedData: FeedDetailType;
-  toggleLike: () => void;
   diveLogId: string;
   fetchFeedData: (id: string) => void;
 }
@@ -21,15 +23,36 @@ interface Props {
 export default function FeedDetailRead({
   routeCommentPage,
   feedData,
-  toggleLike,
   diveLogId,
   fetchFeedData,
 }: Props) {
   const windowSize = useWindowSize();
+  const [feedImgLoaded, setFeedImgLoaded] = useState(false);
+  const [isLiked, setIsLiked] = useState(false);
 
   useEffect(() => {
     fetchFeedData(diveLogId);
+    fetchCheckLiked();
   }, []);
+
+  const toggleLike = async () => {
+    try {
+      await fetchDiveLogsLike(diveLogId);
+      fetchFeedData(diveLogId);
+      fetchCheckLiked();
+    } catch (error) {
+      console.log(error);
+    }
+  };
+
+  const fetchCheckLiked = async () => {
+    try {
+      const res = await fetchDiveLogsIsLiked(diveLogId);
+      setIsLiked(res);
+    } catch (error) {
+      console.log(error);
+    }
+  };
 
   const getDiveType = (diveType: DiveType) => {
     switch (diveType) {
@@ -44,7 +67,7 @@ export default function FeedDetailRead({
 
   return (
     <>
-      <div className="relative">
+      <div className="relative bg-white">
         <div className="absolute left-[22px] top-[22px]">
           <IdBadge id={feedData.writer.nickName} />
         </div>
@@ -54,7 +77,20 @@ export default function FeedDetailRead({
           fill={windowSize ? false : true}
           width={windowSize?.width}
           height={windowSize?.width}
+          objectFit="cover"
+          className={`${!feedImgLoaded && 'hidden'} max-w-[393px] max-h-[393px]`}
+          onLoad={() => setFeedImgLoaded(true)}
         />
+        {!feedImgLoaded && (
+          <div className="animate-pulse flex space-x-4">
+            <div className="flex-1 space-y-6">
+              <div
+                className="bg-gray-300 max-w-[393px] max-h-[393px]"
+                style={{ width: windowSize?.width, height: windowSize?.height }}
+              />
+            </div>
+          </div>
+        )}
       </div>
 
       <div className="bg-white rounded-br-3xl rounded-bl-3xl px-6 py-[22px]">
@@ -86,7 +122,7 @@ export default function FeedDetailRead({
             <span>{feedData.commentCnt}</span>
           </button>
           <button className="flex items-center gap-1" onClick={toggleLike}>
-            <HandsClapping />
+            {isLiked ? <HandsClapping /> : <HandsClappingOff />}
             <span>{feedData.likeCnt}</span>
           </button>
         </div>

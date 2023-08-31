@@ -16,7 +16,10 @@ export default function BottomNav() {
   const pathname = usePathname();
 
   return (
-    <div className="w-full h-20 px-11 flex bg-white justify-between py-3  bottom-0 z-10 fixed max-w-[393px]">
+    <div
+      className="w-full h-20 px-11 flex bg-white justify-between py-3  bottom-0 z-10 fixed max-w-[393px]"
+      style={{ boxShadow: '0px -5px 5px -5px rgba(0,0,0,0.3)' }}
+    >
       <Link
         href="/log"
         className="absolute left-[83%] bg-[#426BFF] rounded-[50%] w-[70px] h-[70px] inline-flex justify-center items-center top-0"
