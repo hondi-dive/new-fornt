@@ -81,9 +81,11 @@ export default function FeedDetailMain({
             feedData={feedData}
             routeCommentPage={routeCommentPage}
             toggleLike={toggleLike}
+            diveLogId={diveLogId}
+            fetchFeedData={fetchFeedData}
           />
         ) : (
-          <FeedComment diveLogId={diveLogId} fetchFeedData={fetchFeedData} />
+          <FeedComment diveLogId={diveLogId} />
         )}
 
         <div className="h-[71px] file: flex justify-center items-center py-5">
