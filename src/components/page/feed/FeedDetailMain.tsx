@@ -15,6 +15,7 @@ interface Props {
   routeFeedDetail: (value: FeedDetailPage) => void;
   toggleLike: () => void;
   diveLogId: string;
+  fetchFeedData: (id: string) => void;
 }
 
 export default function FeedDetailMain({
@@ -22,6 +23,7 @@ export default function FeedDetailMain({
   routeFeedDetail,
   toggleLike,
   diveLogId,
+  fetchFeedData,
 }: Props) {
   const [page, setPage] = useState<'feedDetail' | 'comment'>('feedDetail');
   const [userData, setUserData] = useState({
@@ -81,7 +83,7 @@ export default function FeedDetailMain({
             toggleLike={toggleLike}
           />
         ) : (
-          <FeedComment diveLogId={diveLogId} />
+          <FeedComment diveLogId={diveLogId} fetchFeedData={fetchFeedData} />
         )}
 
         <div className="h-[71px] file: flex justify-center items-center py-5">
