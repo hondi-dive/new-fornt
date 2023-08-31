@@ -15,6 +15,7 @@ interface Props {
   routeFeedDetail: (value: FeedDetailPage) => void;
   toggleLike: () => void;
   diveLogId: string;
+  fetchFeedData: (id: string) => void;
 }
 
 export default function FeedDetailMain({
@@ -22,6 +23,7 @@ export default function FeedDetailMain({
   routeFeedDetail,
   toggleLike,
   diveLogId,
+  fetchFeedData,
 }: Props) {
   const [page, setPage] = useState<'feedDetail' | 'comment'>('feedDetail');
   const [userData, setUserData] = useState({
@@ -79,6 +81,8 @@ export default function FeedDetailMain({
             feedData={feedData}
             routeCommentPage={routeCommentPage}
             toggleLike={toggleLike}
+            diveLogId={diveLogId}
+            fetchFeedData={fetchFeedData}
           />
         ) : (
           <FeedComment diveLogId={diveLogId} />

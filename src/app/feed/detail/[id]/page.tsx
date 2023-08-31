@@ -75,6 +75,7 @@ export default function FeedDetail({ params }: Props) {
       {page === 'feedDetailMain' ? (
         <div className="bg-[#567BFF] h-screen">
           <FeedDetailMain
+            fetchFeedData={fetchFeedData}
             feedData={feedData}
             routeFeedDetail={routeFeedDetail}
             toggleLike={toggleLike}
