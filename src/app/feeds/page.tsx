@@ -6,6 +6,7 @@ import Image from 'next/image';
 
 import CheckCircle from '@/assets/icons/CheckCircle.svg';
 import Select from '@/components/common/Select';
+import FeedList from '@/components/page/feeds/FeedList';
 import { fetchDiveLogsFeed } from '@/apis/feed';
 
 const REGIONLIST = [
@@ -157,7 +158,7 @@ export default function Feed() {
             snorkelActive
               ? 'bg-[#567BFF] text-white border-2 border-solid border-[#567BFF]'
               : 'border-[#92AAFD] border-2 border-solid bg-white text-[#7F7F7F]'
-          } text-base outline-none flex items-center rounded-3xl py-1.5 px-5`}
+          } text-base outline-none flex items-center rounded-3xl py-1.5 px-2`}
         >
           스노클
           <CheckCircle color={snorkelActive ? 'white' : '#7F7F7F'} />
@@ -170,7 +171,7 @@ export default function Feed() {
             freedivingActive
               ? 'bg-[#567BFF] text-white border-2 border-solid border-[#567BFF]'
               : 'border-[#92AAFD] border-2 border-solid bg-white text-[#7F7F7F]'
-          } text-base outline-none flex items-center rounded-3xl py-1.5 px-3`}
+          } text-base outline-none flex items-center rounded-3xl py-1.5 px-2`}
         >
           프리다이빙
           <CheckCircle color={freedivingActive ? 'white' : '#7F7F7F'} />
@@ -192,13 +193,7 @@ export default function Feed() {
       <div className="mt-8">
         <div className="pb-24">
           <div className="grid gap-3 grid-cols-2 ">
-            {feedList?.map((item: any) => (
-              <Link key={item.divelogId} href={`/feed/detail/${item.divelogId}`}>
-                <div className="w-full h-[168px]  relative">
-                  <Image src={item.imageUri} alt="썸네일" fill className="rounded-lg" />
-                </div>
-              </Link>
-            ))}
+            <FeedList feedList={feedList} />
           </div>
         </div>
       </div>
