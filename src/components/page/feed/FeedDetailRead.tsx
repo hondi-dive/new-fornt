@@ -1,5 +1,5 @@
+'use client';
 import Image from 'next/image';
-import DumiImg from '@/assets/images/diving.png';
 import HandsClapping from '@/assets/icons/handsClapping.svg';
 import HashTag from '@/components/page/feed/HashTag';
 import Tooltip from '@/assets/icons/Tooltip';
@@ -8,15 +8,28 @@ import Satisfaction from '@/components/page/log/Satisfaction';
 import { FeedDetailType } from '@/types/feed';
 import { DiveType } from '@/types/log';
 import useWindowSize from '@/hooks/useWindowSize';
+import { useEffect } from 'react';
 
 interface Props {
   routeCommentPage: () => void;
   feedData: FeedDetailType;
   toggleLike: () => void;
+  diveLogId: string;
+  fetchFeedData: (id: string) => void;
 }
 
-export default function FeedDetailRead({ routeCommentPage, feedData, toggleLike }: Props) {
+export default function FeedDetailRead({
+  routeCommentPage,
+  feedData,
+  toggleLike,
+  diveLogId,
+  fetchFeedData,
+}: Props) {
   const windowSize = useWindowSize();
+
+  useEffect(() => {
+    fetchFeedData(diveLogId);
+  }, []);
 
   const getDiveType = (diveType: DiveType) => {
     switch (diveType) {
