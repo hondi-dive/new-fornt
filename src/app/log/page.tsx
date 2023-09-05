@@ -20,7 +20,7 @@ import ArrowDown from '@/assets/icons/arrowDown.svg';
 import { convertDashToKorean } from '@/utils/format';
 import LogDataSelector from '@/components/page/log/LogDataSelector';
 import { useRouter } from 'next/navigation';
-import { fetchCreateDiveLogs } from '@/apis/log';
+import { postDiveLogs } from '@/apis/log';
 import HashTagsInput from '@/components/page/log/HashTagsInput';
 import MapPin from '@/assets/icons/mapPin.svg';
 
@@ -63,7 +63,7 @@ export default function Log() {
       if (!checkValidData()) return;
       const formData = createFormData();
       if (!formData) return alert('이미지를 넣어주세요');
-      await fetchCreateDiveLogs(formData);
+      await postDiveLogs(formData);
 
       router.replace('/feeds');
     } catch (error) {

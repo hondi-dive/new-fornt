@@ -1,4 +1,4 @@
-import { fetchDiveLogsDelete, fetchTogglePublic } from '@/apis/log';
+import { deleteDiveLogs, patchDiveLogs } from '@/apis/log';
 import GearSix from '@/assets/icons/GearSix.svg';
 import { FeedDetailType } from '@/types/feed';
 import { Menu, Transition } from '@headlessui/react';
@@ -15,7 +15,7 @@ const NEXT_PUBLIC_KAKAO_JAVASCRIPT_KEY = process.env.NEXT_PUBLIC_KAKAO_JAVASCRIP
 const FeedSetting = ({ diveLogId, feedData }: Props) => {
   const fetchDeleteLog = async () => {
     try {
-      fetchDiveLogsDelete(diveLogId);
+      deleteDiveLogs(diveLogId);
     } catch (error) {
       console.log(error);
       alert('로그 삭제 중 에러가 발생했습니다.');
@@ -24,7 +24,7 @@ const FeedSetting = ({ diveLogId, feedData }: Props) => {
 
   const fetchChangePublic = async () => {
     try {
-      fetchTogglePublic(diveLogId);
+      patchDiveLogs(diveLogId);
     } catch (error) {
       console.log(error);
       alert('비공개 전환중 에러가 발생했습니다.');

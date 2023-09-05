@@ -6,7 +6,7 @@ interface Props {
   type?: string;
 }
 
-export const fetchDiveLogsFeed = async ({ address, type }: Props) => {
+export const getDiveLogsFeeds = async ({ address, type }: Props) => {
   if (address) {
     const res = await axios.get<null, IFeed[]>(
       `/hondi/divelogs/feeds?address=${address}&type=${type}`,
@@ -18,7 +18,7 @@ export const fetchDiveLogsFeed = async ({ address, type }: Props) => {
   }
 };
 
-export const fetchDiveLogsIsLiked = async (diveLogId: string) => {
+export const getDiveLogsIsLiked = async (diveLogId: string) => {
   const res: boolean = await axios.get(`/hondi/divelogs/${diveLogId}/is_liked`);
   return res;
 };

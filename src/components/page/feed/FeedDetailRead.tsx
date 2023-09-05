@@ -10,8 +10,8 @@ import { FeedDetailType } from '@/types/feed';
 import { DiveType } from '@/types/log';
 import useWindowSize from '@/hooks/useWindowSize';
 import { useEffect, useState } from 'react';
-import { fetchDiveLogsIsLiked } from '@/apis/feed';
-import { fetchDiveLogsLike } from '@/apis/log';
+import { getDiveLogsIsLiked } from '@/apis/feed';
+import { postDiveLogsLike } from '@/apis/log';
 
 interface Props {
   routeCommentPage: () => void;
@@ -37,7 +37,7 @@ export default function FeedDetailRead({
 
   const toggleLike = async () => {
     try {
-      await fetchDiveLogsLike(diveLogId);
+      await postDiveLogsLike(diveLogId);
       fetchFeedData(diveLogId);
       fetchCheckLiked();
     } catch (error) {
@@ -47,7 +47,7 @@ export default function FeedDetailRead({
 
   const fetchCheckLiked = async () => {
     try {
-      const res = await fetchDiveLogsIsLiked(diveLogId);
+      const res = await getDiveLogsIsLiked(diveLogId);
       setIsLiked(res);
     } catch (error) {
       console.log(error);
