@@ -1,6 +1,6 @@
 import axios from './index';
 
-export const fetchMap = async (
+export const getDiveLogsMap = async (
   latitude: number,
   longitude: number,
   sideLength: number,

@@ -1,6 +1,6 @@
 import axios from './index';
 
-export const fetchUserImgUpload = async (imageForm: FormData) => {
+export const postUsersImages = async (imageForm: FormData) => {
   const config = {
     headers: {
       'Content-Type': 'multipart/form-data',
@@ -11,7 +11,7 @@ export const fetchUserImgUpload = async (imageForm: FormData) => {
   return res;
 };
 
-export const fetchUserNicknameUpload = async (nickname: string) => {
+export const putUsersNickname = async (nickname: string) => {
   const res = await axios.put(`/hondi/users/nickname`, { nickname });
   return res;
 };

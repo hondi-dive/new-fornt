@@ -1,6 +1,6 @@
 'use client';
 import { useEffect, useState } from 'react';
-import { fetchDiveLogsDetail } from '@/apis/log';
+import { getDiveLogs } from '@/apis/log';
 import { FeedDetailPage, FeedDetailType } from '@/types/feed';
 import FeedDetailMain from '@/components/page/feed/FeedDetailMain';
 import FeedDetailLog from '@/components/page/feed/FeedDetailLog';
@@ -49,7 +49,7 @@ export default function FeedDetail({ params }: Props) {
 
   const fetchFeedData = async (id: string) => {
     try {
-      const res: any = await fetchDiveLogsDetail(id);
+      const res: any = await getDiveLogs(id);
       setFeedData(res);
     } catch (error) {
       console.log(error);
