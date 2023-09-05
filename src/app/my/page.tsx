@@ -6,15 +6,15 @@ import Pencil from '@/assets/icons/pencilSimpleLine.svg';
 import { Tab } from '@headlessui/react';
 import { ChangeEvent, useEffect, useRef, useState } from 'react';
 import {
-  getUsersDiveLogsCommented,
-  getUsersDiveLogsLike,
-  getUsersDiveLogsMy,
-  getUsersDetail,
+  fetchCommentedDiveLog,
+  fetchLikeDiveLog,
+  fetchMyDiveLog,
+  fetchUserDetail,
 } from '@/apis/log';
 import { MyPageLogData } from '@/types/log';
 import Link from 'next/link';
 import imageCompression from 'browser-image-compression';
-import { postUsersImages, putUsersNickname } from '@/apis/my';
+import { fetchUserImgUpload, fetchUserNicknameUpload } from '@/apis/my';
 
 export default function My() {
   const fileInputRef = useRef<HTMLInputElement>(null);
@@ -57,7 +57,7 @@ export default function My() {
 
   const fetchUserData = async () => {
     try {
-      const res = await getUsersDetail();
+      const res = await fetchUserDetail();
       setUserData(res);
     } catch (error) {
       console.log(error);
@@ -67,7 +67,7 @@ export default function My() {
 
   const fetchMyLog = async () => {
     try {
-      const res = await getUsersDiveLogsMy();
+      const res = await fetchMyDiveLog();
       setMyLogList(res);
     } catch (error) {
       console.log(error);
@@ -77,7 +77,7 @@ export default function My() {
 
   const fetchLikeLog = async () => {
     try {
-      const res = await getUsersDiveLogsLike();
+      const res = await fetchLikeDiveLog();
       setLikeLogList(res);
     } catch (error) {
       console.log(error);
@@ -87,7 +87,7 @@ export default function My() {
 
   const fetchCommentedLog = async () => {
     try {
-      const res = await getUsersDiveLogsCommented();
+      const res = await fetchCommentedDiveLog();
       setCommentLogList(res);
     } catch (error) {
       console.log(error);
@@ -97,7 +97,7 @@ export default function My() {
 
   const fetchProfileImgUpload = async (imageForm: FormData) => {
     try {
-      await postUsersImages(imageForm);
+      await fetchUserImgUpload(imageForm);
       fetchUserData();
       setImage('');
     } catch (error) {
@@ -109,7 +109,7 @@ export default function My() {
 
   const fetchProfileNicknameUpload = async () => {
     try {
-      await putUsersNickname(nickname);
+      await fetchUserNicknameUpload(nickname);
       setIsNickNameEdit(false);
       setNickName('');
       fetchUserData();

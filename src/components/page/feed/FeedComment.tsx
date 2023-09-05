@@ -1,7 +1,7 @@
 import Input from '@/components/common/Input';
 import useWindowSize from '@/hooks/useWindowSize';
 import Comment from '@/components/page/feed/Comment';
-import { getComment, postComment, getUsersDetail } from '@/apis/log';
+import { fetchCommentList, fetchCreateComment, fetchUserDetail } from '@/apis/log';
 import { useEffect, useState } from 'react';
 import { FeedCommentType } from '@/types/feed';
 import Button from '@/components/common/Button';
@@ -39,7 +39,7 @@ export default function FeedComment({ diveLogId }: Props) {
 
   const fetchUserData = async () => {
     try {
-      const res = await getUsersDetail();
+      const res = await fetchUserDetail();
       setUserData(res);
     } catch (error) {
       console.log(error);
@@ -49,7 +49,7 @@ export default function FeedComment({ diveLogId }: Props) {
 
   const fetchGetCommentList = async () => {
     try {
-      const res = await getComment(diveLogId);
+      const res = await fetchCommentList(diveLogId);
       setCommentList(res);
     } catch (error) {
       console.log(error);
@@ -59,7 +59,7 @@ export default function FeedComment({ diveLogId }: Props) {
 
   const fetchCreateLogComment = async () => {
     try {
-      await postComment({
+      await fetchCreateComment({
         divelogId: diveLogId,
         content: comment,
       });
