@@ -4,7 +4,7 @@ import { useState, useEffect } from 'react';
 
 import Select from '@/components/common/Select';
 import FeedList from '@/components/page/feeds/FeedList';
-import { getDiveLogsFeeds } from '@/apis/feed';
+import { fetchDiveLogsFeed } from '@/apis/feed';
 import { JEJICITYAREAS, SEOGWIPOCITYAREAS, CITYS } from '@/constants/cityAreas';
 import { Area, City } from '@/types/area';
 import { IFeed } from '@/types/feed';
@@ -43,7 +43,7 @@ export default function Feed() {
   };
 
   const loadDiveLogsFeed = async () => {
-    const res = await getDiveLogsFeeds({
+    const res = await fetchDiveLogsFeed({
       address:
         city && area ? '제주특별자치도 ' + city?.selectedValue + ' ' + area?.selectedValue : null,
       type: createSelectedActivitiesString(),

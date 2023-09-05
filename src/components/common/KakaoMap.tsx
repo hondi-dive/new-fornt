@@ -7,7 +7,7 @@ import Script from 'next/script';
 import Head from 'next/head';
 import { pixelsToMeters } from '@/utils/meter';
 import { KakaoInfoWindow, KakaoLatLng, KakaoMap, KakaoMarker } from '@/types/kakao';
-import { getDiveLogsMap } from '@/apis/map';
+import { fetchMap } from '@/apis/map';
 import SearchInput from '@/components/common/SearchInput';
 declare global {
   interface Window {
@@ -74,7 +74,7 @@ const KakaoMap = () => {
         const center = map.getCenter();
         const zoomLevel = map.getLevel() as number;
 
-        const res = await getDiveLogsMap(
+        const res = await fetchMap(
           center.getLat(),
           center.getLng(),
           pixelsToMeters(zoomLevel, containerRef.current?.offsetHeight) ?? 500000,
@@ -87,7 +87,7 @@ const KakaoMap = () => {
       const loadInitialData = async () => {
         const center = map.getCenter();
         const zoomLevel = map.getLevel() as number;
-        const res = await getDiveLogsMap(
+        const res = await fetchMap(
           center.getLat(),
           center.getLng(),
           pixelsToMeters(zoomLevel, containerRef.current?.offsetHeight) ?? 500000,

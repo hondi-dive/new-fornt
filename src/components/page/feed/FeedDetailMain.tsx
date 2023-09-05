@@ -5,7 +5,7 @@ import ArrowCircle from '@/assets/icons/arrowCircle.svg';
 import { useEffect, useState } from 'react';
 import HeaderLayout from '@/layouts/HeaderLayout';
 import XIcon from '@/assets/icons/XIcon';
-import { getUsersDetail } from '@/apis/log';
+import { fetchUserDetail } from '@/apis/log';
 import FeedSetting from '@/components/page/feed/FeedSetting';
 import FeedShare from '@/components/page/feed/FeedShare';
 
@@ -36,7 +36,7 @@ export default function FeedDetailMain({
 
   const fetchUserData = async () => {
     try {
-      const res = await getUsersDetail();
+      const res = await fetchUserDetail();
       setUserData(res);
     } catch (error) {
       console.log(error);
